@@ -1,0 +1,60 @@
+import { z } from 'zod';
+import { ProjectPropertyType } from '../core/enums/index.js';
+export declare const ProjectSearchParamsSchema: z.ZodObject<{
+    immediateOccupancy: z.ZodOptional<z.ZodBoolean>;
+    page: z.ZodOptional<z.ZodNumber>;
+    minRooms: z.ZodOptional<z.ZodNumber>;
+    maxRooms: z.ZodOptional<z.ZodNumber>;
+    minPrice: z.ZodOptional<z.ZodNumber>;
+    maxPrice: z.ZodOptional<z.ZodNumber>;
+    propertyType: z.ZodOptional<z.ZodEnum<typeof ProjectPropertyType>>;
+    region: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    topArea: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    area: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    city: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    neighborhood: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+}, z.core.$strip>;
+export declare const ProjectListParamsSchema: z.ZodObject<{
+    limit: z.ZodOptional<z.ZodNumber>;
+    immediateOccupancy: z.ZodOptional<z.ZodBoolean>;
+    page: z.ZodOptional<z.ZodNumber>;
+    minRooms: z.ZodOptional<z.ZodNumber>;
+    maxRooms: z.ZodOptional<z.ZodNumber>;
+    propertyType: z.ZodOptional<z.ZodEnum<typeof ProjectPropertyType>>;
+    region: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    topArea: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    area: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    city: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    neighborhood: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+}, z.core.$strip>;
+export declare const ProjectListingParamsSchema: z.ZodObject<{
+    limit: z.ZodOptional<z.ZodNumber>;
+    immediateOccupancy: z.ZodOptional<z.ZodBoolean>;
+    page: z.ZodOptional<z.ZodNumber>;
+    minRooms: z.ZodOptional<z.ZodNumber>;
+    maxRooms: z.ZodOptional<z.ZodNumber>;
+    minPrice: z.ZodOptional<z.ZodNumber>;
+    maxPrice: z.ZodOptional<z.ZodNumber>;
+    region: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    topArea: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    area: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    city: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    neighborhood: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+}, z.core.$strip>;
+export declare const DeveloperFeedParamsSchema: z.ZodObject<{
+    limit: z.ZodOptional<z.ZodNumber>;
+    page: z.ZodOptional<z.ZodNumber>;
+    region: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    topArea: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    area: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    city: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    neighborhood: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+}, z.core.$strip>;
+export declare const DeveloperListParamsSchema: z.ZodObject<{
+    limit: z.ZodOptional<z.ZodNumber>;
+}, z.core.$strip>;
+export type ProjectSearchParams = z.infer<typeof ProjectSearchParamsSchema>;
+export type ProjectListParams = z.infer<typeof ProjectListParamsSchema>;
+export type ProjectListingParams = z.infer<typeof ProjectListingParamsSchema>;
+export type DeveloperFeedParams = z.infer<typeof DeveloperFeedParamsSchema>;
+export type DeveloperListParams = z.infer<typeof DeveloperListParamsSchema>;

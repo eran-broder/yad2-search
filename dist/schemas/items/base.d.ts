@@ -1,0 +1,41 @@
+import { z } from 'zod';
+export declare const AdDatesSchema: z.ZodObject<{
+    createdAt: z.ZodOptional<z.ZodString>;
+    updatedAt: z.ZodOptional<z.ZodString>;
+    endsAt: z.ZodOptional<z.ZodString>;
+    rebouncedAt: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+export declare const ItemBaseSchema: z.ZodObject<{
+    token: z.ZodString;
+    orderId: z.ZodOptional<z.ZodNumber>;
+    adNumber: z.ZodOptional<z.ZodNumber>;
+    adType: z.ZodOptional<z.ZodString>;
+    categoryId: z.ZodOptional<z.ZodNumber>;
+    subcategoryId: z.ZodOptional<z.ZodNumber>;
+    statusId: z.ZodOptional<z.ZodNumber>;
+    priority: z.ZodOptional<z.ZodNumber>;
+    price: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    abovePrice: z.ZodOptional<z.ZodNullable<z.ZodCoercedNumber<unknown>>>;
+    customer: z.ZodOptional<z.ZodObject<{
+        id: z.ZodOptional<z.ZodNumber>;
+        name: z.ZodOptional<z.ZodString>;
+        secondName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        agencyName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        agencyLogo: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        isVirtualPhoneNumber: z.ZodOptional<z.ZodBoolean>;
+        hideNumberDuringWeekend: z.ZodOptional<z.ZodBoolean>;
+    }, z.core.$strip>>;
+    tags: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        name: z.ZodOptional<z.ZodString>;
+        text: z.ZodOptional<z.ZodString>;
+        textEng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        priority: z.ZodOptional<z.ZodNumber>;
+    }, z.core.$strip>>>;
+    dates: z.ZodOptional<z.ZodObject<{
+        createdAt: z.ZodOptional<z.ZodString>;
+        updatedAt: z.ZodOptional<z.ZodString>;
+        endsAt: z.ZodOptional<z.ZodString>;
+        rebouncedAt: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;

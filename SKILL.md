@@ -12,7 +12,7 @@ frequently counter-intuitive.
 ## Setup
 
 ```bash
-cd <skill-dir> && npm install && npm run build
+cd <skill-dir> && npm install      # dist/ is committed; run `npm run build` only after editing src/
 ```
 
 Yad2's HTML front end sits behind Radware bot protection, but the JSON gateway does not — with

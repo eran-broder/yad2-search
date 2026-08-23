@@ -7,8 +7,11 @@ real estate, vehicles, new-construction projects and the second-hand marketplace
 
 ```bash
 git clone <repo-url> ~/.claude/skills/yad2-search
-cd ~/.claude/skills/yad2-search && npm install && npm run build
+cd ~/.claude/skills/yad2-search && npm install
 ```
+
+`dist/` is committed so the skill works straight after `npm install`. Run `npm run build` after
+editing anything under `src/`.
 
 Claude Code picks the skill up from `SKILL.md`. Ask it things like *"find 5 room apartments in
 כרמליה חיפה"* or *"compare used Mazda prices by year"*.
