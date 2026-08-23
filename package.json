@@ -1,0 +1,51 @@
+{
+  "name": "yad2-search",
+  "version": "0.1.0",
+  "description": "Claude Code skill and typed Node SDK for searching Yad2 \u2014 Israeli real estate, vehicles, new projects and marketplace",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "SKILL.md",
+    "references",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "node tools/no-magic-strings.mjs",
+    "verify": "node tools/verify.mjs",
+    "surface": "node tools/surface.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.14.0"
+  },
+  "license": "MIT",
+  "bin": {
+    "y2": "dist/cli.js"
+  },
+  "keywords": [
+    "yad2",
+    "israel",
+    "real-estate",
+    "vehicles",
+    "marketplace",
+    "claude-code",
+    "skill",
+    "sdk"
+  ]
+}
