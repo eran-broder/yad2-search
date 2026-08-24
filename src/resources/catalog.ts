@@ -15,7 +15,24 @@ import {
 
 export type CatalogScope = Readonly<{ manufacturer?: number; model?: number }>;
 
-const MODEL_CATEGORIES = new Set<VehicleCategory>([VehicleCategory.Cars]);
+/**
+ * Three different facts, previously conflated into one set that only held `cars`.
+ *
+ * Manufacturers come from the catalog endpoint for cars and from the options endpoint for
+ * everything else. Models exist for cars, motorcycles and scooters alike — Yamaha alone
+ * has 88 — but asking for them anywhere else answered with an empty list rather than
+ * saying so. Sub-models are genuinely cars-only: scoping a motorcycle query by model is
+ * rejected outright with "model is not allowed".
+ */
+const MANUFACTURERS_FROM_CATALOG = new Set<VehicleCategory>([VehicleCategory.Cars]);
+
+const MODEL_CATEGORIES = new Set<VehicleCategory>([
+  VehicleCategory.Cars,
+  VehicleCategory.Motorcycles,
+  VehicleCategory.Scooters,
+]);
+
+const SUBMODEL_CATEGORIES = new Set<VehicleCategory>([VehicleCategory.Cars]);
 
 const SPECIAL_TYPE_FIELD: Partial<Record<VehicleCategory, CatalogField>> = {
   [VehicleCategory.Trucks]: CatalogField.SpecialSubCategory,
@@ -45,7 +62,7 @@ export const createCatalogResource = (gateway: Gateway) => {
   const manufacturers = async (
     category: VehicleCategory = VehicleCategory.Cars,
   ): Promise<CatalogEntry[]> => {
-    if (MODEL_CATEGORIES.has(checked(category))) return (await catalog(category)).manufacturer ?? [];
+    if (MANUFACTURERS_FROM_CATALOG.has(checked(category))) return (await catalog(category)).manufacturer ?? [];
     return entriesOf(await options(category), CatalogField.Manufacturer);
   };
 
@@ -60,7 +77,7 @@ export const createCatalogResource = (gateway: Gateway) => {
     model: number,
     category: VehicleCategory = VehicleCategory.Cars,
   ): Promise<CatalogModel[]> =>
-    MODEL_CATEGORIES.has(checked(category))
+    SUBMODEL_CATEGORIES.has(checked(category))
       ? ((await catalog(category, { manufacturer, model })).subModel ?? [])
       : [];
 

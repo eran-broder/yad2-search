@@ -37,14 +37,15 @@ for (const category of Object.values(VehicleCategory)) {
 }
 
 if (withModels) {
+  // Cars, motorcycles and scooters all have models; the other categories have no
+  // manufacturers to hang them off.
   for (const [category, manufacturers] of Object.entries(index.manufacturers)) {
-    if (category !== VehicleCategory.Cars) continue; // only cars expose a model catalogue
     for (const manufacturer of manufacturers) {
       const models = await y2.catalog.models(manufacturer.id, category);
-      if (models.length) index.models[manufacturer.id] = models.map(entry);
+      if (models.length) index.models[`${category}:${manufacturer.id}`] = models.map(entry);
       await wait(MODEL_PACING_MS);
     }
-    console.log(`models for ${Object.keys(index.models).length} manufacturers`);
+    console.log(`${category}: models for ${manufacturers.length} manufacturers`);
   }
 }
 

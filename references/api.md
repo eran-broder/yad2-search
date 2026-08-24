@@ -161,6 +161,10 @@ the live catalog endpoint is the first thing bot protection refuses.
 | Category | manufacturers | specialTypes holds |
 | --- | --- | --- |
 | cars (126), motorcycles (85), scooters (60) | yes | — |
+
+`models(manufacturer, category)` works for all three of those — Yamaha has 88 motorcycle
+models. `subModels` is cars-only: scoping a motorcycle query by model is rejected with
+"model is not allowed".
 | trucks | none | **makes** — Volvo, Iveco, GMC (23) |
 | watercraft | none | **vehicle types** — yachts, jet skis, fishing boats (6) |
 | other | none | **vehicle types** — ATVs, forklifts, caravans (10) |

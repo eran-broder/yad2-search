@@ -14,7 +14,7 @@ export interface CatalogEntry {
 export interface CatalogIndex {
     readonly manufacturers: Partial<Record<VehicleCategory, readonly CatalogEntry[]>>;
     readonly specialTypes: Partial<Record<VehicleCategory, readonly CatalogEntry[]>>;
-    /** Keyed by manufacturer id. Only populated when baked with `--models`. */
+    /** Keyed by `category:manufacturerId`. Only populated when baked with `--models`. */
     readonly models: Readonly<Record<string, readonly CatalogEntry[]>>;
 }
 export declare const catalogIndex: CatalogIndex;
