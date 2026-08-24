@@ -31,3 +31,19 @@ export declare enum ArgumentName {
     Category = "category",
     Deal = "deal"
 }
+/** Buckets in the baked address index (tools/bake-address.mjs). */
+export declare enum BakedBucket {
+    Hoods = "hoods",
+    Cities = "cities",
+    Areas = "areas",
+    TopAreas = "topAreas",
+    Regions = "regions"
+}
+/** Keys of SearchLocation, so a bucket can name the id it fills in. */
+export declare enum LocationField {
+    Region = "region",
+    TopArea = "topArea",
+    Area = "area",
+    City = "city",
+    Neighborhood = "neighborhood"
+}

@@ -1,6 +1,14 @@
 import { z } from 'zod';
 import type { Gateway } from '../core/gateway.js';
-import { AddressEntity, AddressPath, QueryKey, ResultType, Service } from '../core/enums/index.js';
+import {
+  AddressEntity,
+  AddressPath,
+  BakedBucket,
+  LocationField,
+  QueryKey,
+  ResultType,
+  Service,
+} from '../core/enums/index.js';
 import { Yad2NotFoundError } from '../core/errors.js';
 import type { QueryParams } from '../core/query.js';
 import type { EntityId } from '../schemas/common.js';
@@ -16,6 +24,7 @@ import {
   type AddressSuggestions,
   type Place,
 } from '../schemas/address.js';
+import { addressIndex, type BakedPlace } from '../data/address-index.js';
 
 // These endpoints do not paginate — they return whatever `limit` allows and say nothing
 // about what was cut. At 1000 the city list stopped 454 rows short and omitted Tel Aviv,
@@ -45,6 +54,26 @@ export interface SearchLocation {
   readonly neighborhood?: EntityId;
   readonly street?: EntityId;
 }
+
+/** Baked buckets, most specific first, paired with the id each one fills in. */
+const BAKED_KINDS = [
+  [BakedBucket.Hoods, LocationField.Neighborhood],
+  [BakedBucket.Cities, LocationField.City],
+  [BakedBucket.Areas, LocationField.Area],
+  [BakedBucket.TopAreas, LocationField.TopArea],
+  [BakedBucket.Regions, LocationField.Region],
+] as const;
+
+type BakedKind = (typeof BAKED_KINDS)[number][0];
+
+const fromBaked = (place: BakedPlace, own: keyof SearchLocation): SearchLocation =>
+  defined({
+    region: place.region,
+    topArea: place.topArea,
+    area: place.area,
+    city: place.city,
+    [own]: place.id,
+  });
 
 const defined = (entries: Record<string, EntityId | undefined>): SearchLocation =>
   Object.fromEntries(Object.entries(entries).filter(([, value]) => value !== undefined));
@@ -86,6 +115,43 @@ const matchScore = (query: string, place: Place): number => {
   return 0;
 };
 
+/**
+ * English names belong to cities only. Hood transliterations exist but nobody types them,
+ * and several of them share a prefix with "Tel Aviv", which would make the lookup ambiguous
+ * and send an answerable query to the network.
+ */
+const bakedNames = (place: BakedPlace, kind: BakedKind): string[] =>
+  [place.full, place.title, kind === BakedBucket.Cities ? place.eng : undefined]
+    .filter((name): name is string => Boolean(name))
+    .map(normalize);
+
+/**
+ * Resolve against the baked index, and only when the answer is not a guess.
+ *
+ * Walking from the most specific bucket outwards, the first bucket with any match decides:
+ * exactly one hit is the answer, more than one means the name is genuinely ambiguous —
+ * "הדר" names neighbourhoods in several cities — and the caller is better served by Yad2's
+ * own ranking than by whichever row happens to come first here.
+ */
+const bakedLookup = (text: string): SearchLocation | undefined => {
+  const wanted = normalize(text);
+  if (wanted.length === 0) return undefined;
+
+  for (const matches of [
+    (name: string) => name === wanted,
+    (name: string) => name.startsWith(wanted),
+  ]) {
+    for (const [kind, own] of BAKED_KINDS) {
+      const hits = addressIndex[kind].filter((place) =>
+        bakedNames(place, kind).some(matches),
+      );
+      if (hits.length === 1) return fromBaked(hits[0] as BakedPlace, own);
+      if (hits.length > 1) return undefined;
+    }
+  }
+  return undefined;
+};
+
 /** Best match wins; ties go to the more specific bucket, which is the useful default. */
 const bestMatch = (query: string, suggestions: AddressSuggestions): Place | undefined => {
   // SPECIFICITY runs most-specific first, so a strict `>` leaves ties with the narrower
@@ -120,40 +186,30 @@ export const createAddressResource = (gateway: Gateway) => {
     gateway.getData(path(`${AddressPath.Autocomplete}/${encodeURIComponent(text)}`), {}, AutocompleteSchema);
 
   /**
-   * Yad2's autocomplete only indexes Hebrew: "Tel Aviv" comes back with every bucket
-   * empty. The city list does carry `city_eng`, so an English name is still resolvable —
-   * just not through autocomplete. Only consulted when autocomplete found nothing, so the
-   * usual Hebrew path still costs one request.
-   */
-  const locateEnglish = async (text: string): Promise<Place | undefined> => {
-    const wanted = normalize(text);
-    const cities = await list(AddressPath.Cities, CitySchema);
-    return (
-      cities.find((city) => city.city_eng !== undefined && normalize(city.city_eng) === wanted) ??
-      cities.find((city) => city.city_eng !== undefined && normalize(city.city_eng).startsWith(wanted))
-    );
-  };
-
-  /**
    * Transliteration varies more than matching can bridge — Yad2 spells it
    * "Rishon le-Tsiyon", people type "Rishon LeZion". Rather than guess, show the names
    * that share a first word so the caller can pick the right one.
    */
-  const nearbySpellings = async (text: string): Promise<string[]> => {
+  const nearbySpellings = (text: string): string[] => {
     const [first] = normalize(text).split(' ');
     if (first === undefined || first.length < MIN_HINT_LENGTH) return [];
-    const cities = await list(AddressPath.Cities, CitySchema);
-    return cities
-      .filter((city) => city.city_eng !== undefined && normalize(city.city_eng).startsWith(first))
+    return addressIndex.cities
+      .filter((city) => Boolean(city.eng) && normalize(city.eng as string).startsWith(first))
       .slice(0, MAX_HINTS)
-      .map((city) => `${city.city_eng as string} (${city.city_heb})`);
+      .map((city) => `${city.eng as string} (${city.heb})`);
   };
 
   const locate = async (text: string): Promise<SearchLocation> => {
-    const place = bestMatch(text, await autocomplete(text)) ?? (await locateEnglish(text));
+    // The baked index answers most queries without a request at all. Autocomplete still
+    // handles what it cannot: streets, which are not baked, and names too ambiguous to
+    // resolve without Yad2's ranking.
+    const offline = bakedLookup(text);
+    if (offline) return offline;
+
+    const place = bestMatch(text, await autocomplete(text));
     if (place) return toLocation(place);
 
-    const hints = await nearbySpellings(text);
+    const hints = nearbySpellings(text);
     throw new Yad2NotFoundError(
       hints.length
         ? `location "${text}". Yad2 indexes Hebrew; did you mean ${hints.join(', ')}?`
@@ -166,7 +222,10 @@ export const createAddressResource = (gateway: Gateway) => {
     topAreas: () => list(AddressPath.TopAreas, TopAreaSchema),
     areas: () => list(AddressPath.Areas, AreaSchema),
     cities: () => list(AddressPath.Cities, CitySchema),
-    hoods: (cityId: EntityId) => list(AddressPath.Hoods, HoodSchema, { [QueryKey.CityId]: cityId }),
+    // cityId is optional: the endpoint happily returns all 3395 hoods without it, which is
+    // what makes the baked address index a five-request job. Streets do require one.
+    hoods: (cityId?: EntityId) =>
+      list(AddressPath.Hoods, HoodSchema, cityId === undefined ? {} : { [QueryKey.CityId]: cityId }),
     streets: (cityId: EntityId) => list(AddressPath.Streets, StreetSchema, { [QueryKey.CityId]: cityId }),
     autocomplete,
     locate,

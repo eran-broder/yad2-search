@@ -19,31 +19,31 @@ export const PlaceSchema = z.object({
 export const RegionSchema = PlaceSchema.extend({
   region_id: id,
   region_heb: z.string(),
-  region_eng: z.string().optional(),
+  region_eng: z.string().nullable().optional(),
 });
 
 export const TopAreaSchema = PlaceSchema.extend({
   top_area_id: id,
   top_area_heb: z.string(),
-  top_area_eng: z.string().optional(),
+  top_area_eng: z.string().nullable().optional(),
 });
 
 export const AreaSchema = PlaceSchema.extend({
   area_id: id,
   area_heb: z.string(),
-  area_eng: z.string().optional(),
+  area_eng: z.string().nullable().optional(),
 });
 
 export const CitySchema = PlaceSchema.extend({
   city_id: id,
   city_heb: z.string(),
-  city_eng: z.string().optional(),
+  city_eng: z.string().nullable().optional(),
 });
 
 export const HoodSchema = PlaceSchema.extend({
   hood_id: id,
   hood_heb: z.string(),
-  hood_eng: z.string().optional(),
+  hood_eng: z.string().nullable().optional(),
 });
 
 export const StreetSchema = PlaceSchema.extend({

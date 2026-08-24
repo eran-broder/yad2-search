@@ -11,7 +11,8 @@
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "resolveJsonModule": true
   },
   "include": ["src"]
 }

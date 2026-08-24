@@ -36,3 +36,21 @@ export var ArgumentName;
     ArgumentName["Category"] = "category";
     ArgumentName["Deal"] = "deal";
 })(ArgumentName || (ArgumentName = {}));
+/** Buckets in the baked address index (tools/bake-address.mjs). */
+export var BakedBucket;
+(function (BakedBucket) {
+    BakedBucket["Hoods"] = "hoods";
+    BakedBucket["Cities"] = "cities";
+    BakedBucket["Areas"] = "areas";
+    BakedBucket["TopAreas"] = "topAreas";
+    BakedBucket["Regions"] = "regions";
+})(BakedBucket || (BakedBucket = {}));
+/** Keys of SearchLocation, so a bucket can name the id it fills in. */
+export var LocationField;
+(function (LocationField) {
+    LocationField["Region"] = "region";
+    LocationField["TopArea"] = "topArea";
+    LocationField["Area"] = "area";
+    LocationField["City"] = "city";
+    LocationField["Neighborhood"] = "neighborhood";
+})(LocationField || (LocationField = {}));

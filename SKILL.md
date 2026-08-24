@@ -81,6 +81,11 @@ falling back to the most specific one when several fit equally. Ask for a city a
 to rank first. Ask for a neighbourhood and you get it: `locate('כרמליה חיפה')` keeps hood 612. A street resolves too —
 `locate('אבן גבירול תל אביב')` adds `street: 1040`.
 
+Most lookups never touch the network: Yad2's regions, areas, cities and 3395 neighbourhoods
+are baked into the SDK (`npm run bake` refreshes them). Autocomplete is used only for what
+the index cannot answer — streets, and names ambiguous enough to need Yad2's own ranking,
+like `הדר`, which titles neighbourhoods in several cities.
+
 Hebrew is the reliable input: Yad2's autocomplete indexes nothing else. English city names
 still work (`locate('Tel Aviv')`, `'Beer Sheva'`) because the city list carries `city_eng`,
 but transliteration varies — Yad2 spells it `Rishon le-Tsiyon` — so a miss comes back naming

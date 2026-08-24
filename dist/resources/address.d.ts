@@ -21,7 +21,7 @@ export declare const createAddressResource: (gateway: Gateway) => {
         city_id?: string | number | undefined;
         hood_id?: string | number | undefined;
         street_id?: string | number | undefined;
-        region_eng?: string | undefined;
+        region_eng?: string | null | undefined;
     }[]>;
     topAreas: () => Promise<{
         top_area_id: string | number;
@@ -34,7 +34,7 @@ export declare const createAddressResource: (gateway: Gateway) => {
         city_id?: string | number | undefined;
         hood_id?: string | number | undefined;
         street_id?: string | number | undefined;
-        top_area_eng?: string | undefined;
+        top_area_eng?: string | null | undefined;
     }[]>;
     areas: () => Promise<{
         area_id: string | number;
@@ -47,7 +47,7 @@ export declare const createAddressResource: (gateway: Gateway) => {
         city_id?: string | number | undefined;
         hood_id?: string | number | undefined;
         street_id?: string | number | undefined;
-        area_eng?: string | undefined;
+        area_eng?: string | null | undefined;
     }[]>;
     cities: () => Promise<{
         city_id: string | number;
@@ -60,9 +60,9 @@ export declare const createAddressResource: (gateway: Gateway) => {
         area_id?: string | number | undefined;
         hood_id?: string | number | undefined;
         street_id?: string | number | undefined;
-        city_eng?: string | undefined;
+        city_eng?: string | null | undefined;
     }[]>;
-    hoods: (cityId: EntityId) => Promise<{
+    hoods: (cityId?: EntityId) => Promise<{
         hood_id: string | number;
         hood_heb: string;
         type_weight?: number | undefined;
@@ -73,7 +73,7 @@ export declare const createAddressResource: (gateway: Gateway) => {
         area_id?: string | number | undefined;
         city_id?: string | number | undefined;
         street_id?: string | number | undefined;
-        hood_eng?: string | undefined;
+        hood_eng?: string | null | undefined;
     }[]>;
     streets: (cityId: EntityId) => Promise<{
         street_id: string | number;

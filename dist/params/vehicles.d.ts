@@ -154,8 +154,8 @@ export declare const TruckSearchParamsSchema: z.ZodObject<{
     CarSpecialSubCatID: z.ZodOptional<z.ZodUnion<readonly [z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>, z.ZodArray<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>]>>;
 }, z.core.$strip>;
 export declare const WatercraftSearchParamsSchema: z.ZodObject<{
-    area: z.ZodOptional<z.ZodUnion<readonly [z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>, z.ZodArray<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>]>>;
     topArea: z.ZodOptional<z.ZodUnion<readonly [z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>, z.ZodArray<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>]>>;
+    area: z.ZodOptional<z.ZodUnion<readonly [z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>, z.ZodArray<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>]>>;
     price: z.ZodOptional<z.ZodObject<{
         from: z.ZodNumber;
         to: z.ZodNumber;

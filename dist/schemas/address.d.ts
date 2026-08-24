@@ -21,7 +21,7 @@ export declare const RegionSchema: z.ZodObject<{
     street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
     region_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
     region_heb: z.ZodString;
-    region_eng: z.ZodOptional<z.ZodString>;
+    region_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 export declare const TopAreaSchema: z.ZodObject<{
     type_weight: z.ZodOptional<z.ZodNumber>;
@@ -34,7 +34,7 @@ export declare const TopAreaSchema: z.ZodObject<{
     street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
     top_area_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
     top_area_heb: z.ZodString;
-    top_area_eng: z.ZodOptional<z.ZodString>;
+    top_area_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 export declare const AreaSchema: z.ZodObject<{
     type_weight: z.ZodOptional<z.ZodNumber>;
@@ -47,7 +47,7 @@ export declare const AreaSchema: z.ZodObject<{
     street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
     area_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
     area_heb: z.ZodString;
-    area_eng: z.ZodOptional<z.ZodString>;
+    area_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 export declare const CitySchema: z.ZodObject<{
     type_weight: z.ZodOptional<z.ZodNumber>;
@@ -60,7 +60,7 @@ export declare const CitySchema: z.ZodObject<{
     street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
     city_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
     city_heb: z.ZodString;
-    city_eng: z.ZodOptional<z.ZodString>;
+    city_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 export declare const HoodSchema: z.ZodObject<{
     type_weight: z.ZodOptional<z.ZodNumber>;
@@ -73,7 +73,7 @@ export declare const HoodSchema: z.ZodObject<{
     street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
     hood_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
     hood_heb: z.ZodString;
-    hood_eng: z.ZodOptional<z.ZodString>;
+    hood_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 export declare const StreetSchema: z.ZodObject<{
     type_weight: z.ZodOptional<z.ZodNumber>;
@@ -116,7 +116,7 @@ export declare const AutocompleteSchema: z.ZodObject<{
         street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
         region_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
         region_heb: z.ZodString;
-        region_eng: z.ZodOptional<z.ZodString>;
+        region_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>>>;
     "top-areas": z.ZodOptional<z.ZodArray<z.ZodObject<{
         type_weight: z.ZodOptional<z.ZodNumber>;
@@ -129,7 +129,7 @@ export declare const AutocompleteSchema: z.ZodObject<{
         street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
         top_area_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
         top_area_heb: z.ZodString;
-        top_area_eng: z.ZodOptional<z.ZodString>;
+        top_area_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>>>;
     areas: z.ZodOptional<z.ZodArray<z.ZodObject<{
         type_weight: z.ZodOptional<z.ZodNumber>;
@@ -142,7 +142,7 @@ export declare const AutocompleteSchema: z.ZodObject<{
         street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
         area_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
         area_heb: z.ZodString;
-        area_eng: z.ZodOptional<z.ZodString>;
+        area_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>>>;
     cities: z.ZodOptional<z.ZodArray<z.ZodObject<{
         type_weight: z.ZodOptional<z.ZodNumber>;
@@ -155,7 +155,7 @@ export declare const AutocompleteSchema: z.ZodObject<{
         street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
         city_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
         city_heb: z.ZodString;
-        city_eng: z.ZodOptional<z.ZodString>;
+        city_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>>>;
     hoods: z.ZodOptional<z.ZodArray<z.ZodObject<{
         type_weight: z.ZodOptional<z.ZodNumber>;
@@ -168,7 +168,7 @@ export declare const AutocompleteSchema: z.ZodObject<{
         street_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
         hood_id: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
         hood_heb: z.ZodString;
-        hood_eng: z.ZodOptional<z.ZodString>;
+        hood_eng: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     }, z.core.$strip>>>;
     streets: z.ZodOptional<z.ZodArray<z.ZodObject<{
         type_weight: z.ZodOptional<z.ZodNumber>;
