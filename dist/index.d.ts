@@ -34,3 +34,6 @@ export { paginate, collect, type PaginateOptions } from './resources/paginate.js
 export type { SearchLocation } from './resources/address.js';
 export type { MarketResult } from './resources/market.js';
 export type { CatalogScope } from './resources/catalog.js';
+export { addressIndex, type AddressIndex, type BakedPlace } from './data/address-index.js';
+export { catalogIndex, type CatalogIndex, type CatalogEntry as BakedCatalogEntry, } from './data/catalog-index.js';
+export { normalizeName, findByName, type NamedEntry } from './core/text.js';

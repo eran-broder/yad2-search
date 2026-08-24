@@ -50,3 +50,14 @@ export { paginate, collect, type PaginateOptions } from './resources/paginate.js
 export type { SearchLocation } from './resources/address.js';
 export type { MarketResult } from './resources/market.js';
 export type { CatalogScope } from './resources/catalog.js';
+
+// The baked indexes are a feature, not an implementation detail: they are what lets
+// locate() and findManufacturer() answer without a request, and callers may want the raw
+// lists — every manufacturer for a dropdown, every neighbourhood in a city — offline too.
+export { addressIndex, type AddressIndex, type BakedPlace } from './data/address-index.js';
+export {
+  catalogIndex,
+  type CatalogIndex,
+  type CatalogEntry as BakedCatalogEntry,
+} from './data/catalog-index.js';
+export { normalizeName, findByName, type NamedEntry } from './core/text.js';

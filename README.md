@@ -86,7 +86,9 @@ node dist/cli.js realestate.forSale.all '{"region":5,"city":4000,"minRooms":5,"p
 | `npm run build` | compile to `dist/` |
 | `npm run verify` | 8 live checks against the real API |
 | `npm run surface` | print the generated API surface |
-| `npm run lint` | fail on magic strings |
+| `npm run lint` | fail on magic strings and stray control characters |
+| `npm run bake` | refresh the baked address hierarchy (5 requests) |
+| `npm run bake:catalog` | refresh the baked vehicle catalog (6 requests; `--models` adds ~271) |
 | `npm run typecheck` | types only |
 
 ## Documentation

@@ -30,3 +30,9 @@ export * from './params/nearby.js';
 export { flatten } from './resources/realestate.js';
 export { coverOf, urlsOf, fileNameOf } from './resources/images.js';
 export { paginate, collect } from './resources/paginate.js';
+// The baked indexes are a feature, not an implementation detail: they are what lets
+// locate() and findManufacturer() answer without a request, and callers may want the raw
+// lists — every manufacturer for a dropdown, every neighbourhood in a city — offline too.
+export { addressIndex } from './data/address-index.js';
+export { catalogIndex, } from './data/catalog-index.js';
+export { normalizeName, findByName } from './core/text.js';

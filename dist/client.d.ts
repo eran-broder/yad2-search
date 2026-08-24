@@ -941,8 +941,8 @@ export declare const createYad2Client: (options?: Yad2ClientOptions) => {
         models: (manufacturer: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         subModels: (manufacturer: number, model: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         specialTypes: (category: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogEntry[]>;
-        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
-        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
+        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
+        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
     };
     items: {
         realestate: (token: string) => Promise<import("./index.js").RealestateItem>;
@@ -2012,8 +2012,8 @@ export declare const createHttpClient: (options?: FetchTransportOptions) => {
         models: (manufacturer: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         subModels: (manufacturer: number, model: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         specialTypes: (category: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogEntry[]>;
-        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
-        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
+        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
+        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
     };
     items: {
         realestate: (token: string) => Promise<import("./index.js").RealestateItem>;
@@ -3083,8 +3083,8 @@ export declare const createCurlClient: (options?: CurlTransportOptions) => {
         models: (manufacturer: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         subModels: (manufacturer: number, model: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         specialTypes: (category: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogEntry[]>;
-        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
-        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
+        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
+        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
     };
     items: {
         realestate: (token: string) => Promise<import("./index.js").RealestateItem>;
@@ -4158,8 +4158,8 @@ export declare const createNodeClient: ({ fetch, curl }?: NodeClientOptions) => 
         models: (manufacturer: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         subModels: (manufacturer: number, model: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         specialTypes: (category: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogEntry[]>;
-        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
-        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
+        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
+        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
     };
     items: {
         realestate: (token: string) => Promise<import("./index.js").RealestateItem>;
@@ -5229,8 +5229,8 @@ export declare const createBrowserClient: (options?: BrowserTransportOptions) =>
         models: (manufacturer: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         subModels: (manufacturer: number, model: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         specialTypes: (category: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogEntry[]>;
-        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
-        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
+        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
+        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
     };
     items: {
         realestate: (token: string) => Promise<import("./index.js").RealestateItem>;
@@ -6306,8 +6306,8 @@ export declare const createResilientClient: ({ browser, http, curl, retry, }?: R
         models: (manufacturer: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         subModels: (manufacturer: number, model: number, category?: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogModel[]>;
         specialTypes: (category: import("./index.js").VehicleCategory) => Promise<import("./index.js").CatalogEntry[]>;
-        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
-        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./data/catalog-index.js").CatalogEntry | undefined;
+        findManufacturer: (name: string, category?: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
+        findSpecialType: (name: string, category: import("./index.js").VehicleCategory) => import("./index.js").BakedCatalogEntry | undefined;
     };
     items: {
         realestate: (token: string) => Promise<import("./index.js").RealestateItem>;
