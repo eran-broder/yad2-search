@@ -4259,7 +4259,7 @@ export declare const createNodeClient: ({ fetch, curl }?: NodeClientOptions) => 
         }[]>;
     };
 };
-export declare const createBrowserClient: (options: BrowserTransportOptions) => {
+export declare const createBrowserClient: (options?: BrowserTransportOptions) => {
     vehicles: import("./resources/vehicles.js").VehiclesResource;
     realestate: {
         forSale: import("./resources/realestate.js").RealestateFeedResource<{
@@ -5322,7 +5322,7 @@ export declare const createBrowserClient: (options: BrowserTransportOptions) => 
     };
 };
 export interface ResilientClientOptions {
-    readonly browser: BrowserTransportOptions;
+    readonly browser?: BrowserTransportOptions;
     readonly http?: FetchTransportOptions;
     readonly curl?: CurlTransportOptions;
     readonly retry?: RetryTransportOptions;

@@ -13,3 +13,15 @@ export enum HttpMethod {
   Get = 'GET',
   Post = 'POST',
 }
+
+export enum ProcessEvent {
+  Exit = 'exit',
+  Error = 'error',
+  Data = 'data',
+  Close = 'close',
+}
+
+export enum StdioMode {
+  Ignore = 'ignore',
+  Pipe = 'pipe',
+}

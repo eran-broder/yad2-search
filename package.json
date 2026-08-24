@@ -47,5 +47,8 @@
     "claude-code",
     "skill",
     "sdk"
-  ]
+  ],
+  "optionalDependencies": {
+    "playwright-http-server": "^2.4.0"
+  }
 }

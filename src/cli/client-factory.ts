@@ -29,11 +29,6 @@ const kindFor = (flags: ClientFlags): TransportKind => {
   return flags.port ? TransportKind.Resilient : TransportKind.Node;
 };
 
-const requirePort = (port: number | undefined): number => {
-  if (port === undefined) throw new Error('--port is required for this transport');
-  return port;
-};
-
 export const clientFrom = (flags: ClientFlags): Yad2Client => {
   const port = toNumber(flags.port);
   const minIntervalMs = toNumber(flags.interval);
@@ -45,9 +40,9 @@ export const clientFrom = (flags: ClientFlags): Yad2Client => {
     case TransportKind.Curl:
       return createCurlClient(intervals);
     case TransportKind.Browser:
-      return createBrowserClient({ port: requirePort(port) });
+      return createBrowserClient(port === undefined ? {} : { port });
     case TransportKind.Resilient:
-      return createResilientClient({ browser: { port: requirePort(port) } });
+      return createResilientClient({ browser: port === undefined ? {} : { port } });
     default:
       return createNodeClient({ curl: intervals });
   }

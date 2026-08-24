@@ -1,9 +1,10 @@
 import type { Transport, TransportResponse } from '../transport.js';
 import { createRateLimiter } from '../rate-limiter.js';
 import { HttpHeader, HttpMethod, MediaType } from '../enums/http.js';
+import { sharedServer } from '../managed-server.js';
 
 export interface BrowserTransportOptions {
-  readonly port: number;
+  readonly port?: number;
   readonly originUrl?: string;
   readonly minIntervalMs?: number;
   readonly settleMs?: number;
@@ -40,7 +41,7 @@ const fetchInPageCode = (url: string): string => `
   }, ${JSON.stringify(url)});
 `;
 
-export const createBrowserTransport = (options: BrowserTransportOptions): Transport => {
+export const createBrowserTransport = (options: BrowserTransportOptions = {}): Transport => {
   const originUrl = options.originUrl ?? DEFAULT_ORIGIN_URL;
   const settleMs = options.settleMs ?? DEFAULT_SETTLE_MS;
   const schedule = createRateLimiter({
@@ -49,14 +50,17 @@ export const createBrowserTransport = (options: BrowserTransportOptions): Transp
 
   let session: Promise<unknown> | null = null;
 
-  const openOrigin = (): Promise<unknown> => {
-    session ??= evaluate(options.port, openOriginCode(originUrl, settleMs));
+  const port = async (): Promise<number> =>
+    options.port ?? (await sharedServer()).port;
+
+  const openOrigin = async (): Promise<unknown> => {
+    session ??= evaluate(await port(), openOriginCode(originUrl, settleMs));
     return session;
   };
 
   const attempt = async (url: string): Promise<TransportResponse> => {
     await openOrigin();
-    return (await evaluate(options.port, fetchInPageCode(url))) as TransportResponse;
+    return (await evaluate(await port(), fetchInPageCode(url))) as TransportResponse;
   };
 
   const send = async (url: string): Promise<TransportResponse> => {

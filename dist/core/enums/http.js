@@ -14,3 +14,15 @@ export var HttpMethod;
     HttpMethod["Get"] = "GET";
     HttpMethod["Post"] = "POST";
 })(HttpMethod || (HttpMethod = {}));
+export var ProcessEvent;
+(function (ProcessEvent) {
+    ProcessEvent["Exit"] = "exit";
+    ProcessEvent["Error"] = "error";
+    ProcessEvent["Data"] = "data";
+    ProcessEvent["Close"] = "close";
+})(ProcessEvent || (ProcessEvent = {}));
+export var StdioMode;
+(function (StdioMode) {
+    StdioMode["Ignore"] = "ignore";
+    StdioMode["Pipe"] = "pipe";
+})(StdioMode || (StdioMode = {}));

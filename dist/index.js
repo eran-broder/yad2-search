@@ -1,6 +1,7 @@
 export { createYad2Client, createHttpClient, createCurlClient, createNodeClient, createBrowserClient, createResilientClient, } from './client.js';
 export * from './core/enums/index.js';
 export * from './core/errors.js';
+export { sharedServer, Yad2BrowserUnavailableError } from './core/managed-server.js';
 export * from './core/range.js';
 export * from './core/transport.js';
 export { createFetchTransport } from './core/transports/fetch-transport.js';

@@ -1,5 +1,6 @@
 import { createRateLimiter } from '../rate-limiter.js';
 import { HttpHeader, HttpMethod, MediaType } from '../enums/http.js';
+import { sharedServer } from '../managed-server.js';
 const DEFAULT_ORIGIN_URL = 'https://www.yad2.co.il/';
 const WAIT_UNTIL = 'domcontentloaded';
 const CREDENTIALS = 'include';
@@ -28,20 +29,21 @@ const fetchInPageCode = (url) => `
     return { status: response.status, body: await response.text() };
   }, ${JSON.stringify(url)});
 `;
-export const createBrowserTransport = (options) => {
+export const createBrowserTransport = (options = {}) => {
     const originUrl = options.originUrl ?? DEFAULT_ORIGIN_URL;
     const settleMs = options.settleMs ?? DEFAULT_SETTLE_MS;
     const schedule = createRateLimiter({
         minIntervalMs: options.minIntervalMs ?? DEFAULT_MIN_INTERVAL_MS,
     });
     let session = null;
-    const openOrigin = () => {
-        session ??= evaluate(options.port, openOriginCode(originUrl, settleMs));
+    const port = async () => options.port ?? (await sharedServer()).port;
+    const openOrigin = async () => {
+        session ??= evaluate(await port(), openOriginCode(originUrl, settleMs));
         return session;
     };
     const attempt = async (url) => {
         await openOrigin();
-        return (await evaluate(options.port, fetchInPageCode(url)));
+        return (await evaluate(await port(), fetchInPageCode(url)));
     };
     const send = async (url) => {
         try {

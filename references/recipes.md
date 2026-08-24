@@ -9,7 +9,7 @@ import {
   PropertyCondition, ResidentialProperty, Yad2Category,
 } from 'yad2-sdk';
 
-const yad2 = createResilientClient({ browser: { port: 1234 } });
+const yad2 = createResilientClient();   // spawns and manages its own browser
 ```
 
 ## Apartments in a neighbourhood

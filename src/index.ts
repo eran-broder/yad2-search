@@ -13,6 +13,7 @@ export {
 
 export * from './core/enums/index.js';
 export * from './core/errors.js';
+export { sharedServer, Yad2BrowserUnavailableError, type ManagedServer } from './core/managed-server.js';
 export * from './core/range.js';
 export * from './core/transport.js';
 

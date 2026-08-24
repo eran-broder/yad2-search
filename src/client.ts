@@ -60,18 +60,18 @@ export const createNodeClient = ({ fetch = {}, curl = {} }: NodeClientOptions = 
     transport: createFallbackTransport(createFetchTransport(fetch), createCurlTransport(curl)),
   });
 
-export const createBrowserClient = (options: BrowserTransportOptions) =>
+export const createBrowserClient = (options: BrowserTransportOptions = {}) =>
   createYad2Client({ transport: createBrowserTransport(options) });
 
 export interface ResilientClientOptions {
-  readonly browser: BrowserTransportOptions;
+  readonly browser?: BrowserTransportOptions;
   readonly http?: FetchTransportOptions;
   readonly curl?: CurlTransportOptions;
   readonly retry?: RetryTransportOptions;
 }
 
 export const createResilientClient = ({
-  browser,
+  browser = {},
   http = {},
   curl = {},
   retry = {},

@@ -40,7 +40,7 @@ export const createCurlClient = (options = {}) => createYad2Client({ transport: 
 export const createNodeClient = ({ fetch = {}, curl = {} } = {}) => createYad2Client({
     transport: createFallbackTransport(createFetchTransport(fetch), createCurlTransport(curl)),
 });
-export const createBrowserClient = (options) => createYad2Client({ transport: createBrowserTransport(options) });
-export const createResilientClient = ({ browser, http = {}, curl = {}, retry = {}, }) => createYad2Client({
+export const createBrowserClient = (options = {}) => createYad2Client({ transport: createBrowserTransport(options) });
+export const createResilientClient = ({ browser = {}, http = {}, curl = {}, retry = {}, }) => createYad2Client({
     transport: createFallbackTransport(createRetryTransport(createFetchTransport(http), retry), createFallbackTransport(createCurlTransport(curl), createBrowserTransport(browser))),
 });

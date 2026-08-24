@@ -7,7 +7,9 @@ real estate, vehicles, new-construction projects and the second-hand marketplace
 
 ```bash
 git clone <repo-url> ~/.claude/skills/yad2-search
-cd ~/.claude/skills/yad2-search && npm install
+cd ~/.claude/skills/yad2-search
+npm install
+npx playwright install chromium   # one-time, ~115MB
 ```
 
 `dist/` is committed so the skill works straight after `npm install`. Run `npm run build` after
@@ -21,7 +23,7 @@ Claude Code picks the skill up from `SKILL.md`. Ask it things like *"find 5 room
 ```ts
 import { createResilientClient, flatten } from 'yad2-search';
 
-const yad2 = createResilientClient({ browser: { port: 1234 } });
+const yad2 = createResilientClient();   // spawns and manages its own browser
 const where = await yad2.address.locate('כרמליה חיפה');
 const feed = await yad2.realestate.forSale.search({ ...where, minRooms: 5 });
 
@@ -33,7 +35,7 @@ flatten(feed).forEach((ad) => console.log(ad.address?.street?.text, ad.price));
 ```bash
 node dist/cli.js                                     # every command
 node dist/cli.js realestate.forSale.search --help    # params, types, enum members
-node dist/cli.js address.locate '"רמת גן"' --port 1234
+node dist/cli.js address.locate '"רמת גן"' --transport browser
 ```
 
 ## Scripts
