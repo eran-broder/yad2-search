@@ -2,6 +2,7 @@ import { AddressEntity, AddressPath, BakedBucket, LocationField, QueryKey, Resul
 import { Yad2NotFoundError } from '../core/errors.js';
 import { AreaSchema, AutocompleteSchema, CitySchema, HoodSchema, RegionSchema, StreetSchema, TopAreaSchema, addressList, } from '../schemas/address.js';
 import { addressIndex } from '../data/address-index.js';
+import { normalizeName as normalize } from '../core/text.js';
 // These endpoints do not paginate — they return whatever `limit` allows and say nothing
 // about what was cut. At 1000 the city list stopped 454 rows short and omitted Tel Aviv,
 // so anything built on it was quietly wrong. Ask for more than exists.
@@ -43,12 +44,6 @@ const toLocation = (place) => defined({
     neighborhood: place.hood_id,
     street: place.street_id,
 });
-const SEPARATORS = /[,\-–]/g;
-// Dropped rather than spaced: Yad2 writes "Be'er Sheva" and מצפה אבי״ב, but people type
-// "Beer Sheva". Turning the mark into a space would split the word instead of closing it.
-const MARKS = /['"״׳`]/g;
-const WHITESPACE = /\s+/g;
-const normalize = (text) => text.replace(MARKS, '').replace(SEPARATORS, ' ').replace(WHITESPACE, ' ').trim().toLowerCase();
 /**
  * How well a candidate answers the query, independent of how specific it is.
  * Autocomplete returns a best guess in every bucket, so a hood is always present even

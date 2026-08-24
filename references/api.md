@@ -149,6 +149,24 @@ Project (`projects.*`): `metaData.projectName`, `metaData.companyDetails.name`,
 **`price` can be `0`** on both real estate and vehicles — that is "call for price", not free.
 Pass `priceOnly: true` to have the server drop those instead of filtering afterwards.
 
+## Vehicle catalog
+
+`catalog.findManufacturer(name, category)` resolves a make to its id offline, in either
+language, from the baked catalog (`npm run bake:catalog`). It returns `undefined` rather
+than guessing when a name is ambiguous. A vehicle search cannot start without this id, and
+the live catalog endpoint is the first thing bot protection refuses.
+
+`specialTypes` means different things per category, so read it before mapping a name:
+
+| Category | manufacturers | specialTypes holds |
+| --- | --- | --- |
+| cars (126), motorcycles (85), scooters (60) | yes | — |
+| trucks | none | **makes** — Volvo, Iveco, GMC (23) |
+| watercraft | none | **vehicle types** — yachts, jet skis, fishing boats (6) |
+| other | none | **vehicle types** — ATVs, forklifts, caravans (10) |
+
+So a truck make is `findSpecialType('Volvo', 'trucks')`, not `findManufacturer`.
+
 ## Known API quirks
 
 - `engineVolume` is a number on cars, an object on watercraft.

@@ -24,7 +24,8 @@
     "lint": "node tools/no-magic-strings.mjs",
     "verify": "node tools/verify.mjs",
     "surface": "node tools/surface.mjs",
-    "bake": "node tools/bake-address.mjs"
+    "bake": "node tools/bake-address.mjs",
+    "bake:catalog": "node tools/bake-catalog.mjs"
   },
   "engines": {
     "node": ">=18"

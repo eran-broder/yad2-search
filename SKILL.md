@@ -128,6 +128,9 @@ See `${CLAUDE_SKILL_DIR}/references/api.md` for every parameter per vertical, an
   arrays for `area`, `topArea`, `manufacturer`, `model`.
 - **Vehicle ranges are objects**, serialized as `from-to`: `year: range(2020, 2024)`.
   Real estate uses separate `minX`/`maxX` numbers instead.
+- **Never hardcode a manufacturer id** — `catalog.findManufacturer('Toyota')` resolves it
+  offline from the baked catalog, in Hebrew or English. Trucks have no manufacturers at all;
+  their makes live in `findSpecialType(name, 'trucks')`. See `api.md`.
 - **Enum values are not sequential.** `GearBox.Automatic` is 102, not 2. Always use the exported
   enums (`ResidentialProperty`, `CommercialProperty`, `PropertyCondition`, `CommercialDealType`,
   `EngineType`, `CarTag`, `MarketCondition`, `SpecialVehicleType`, `WatercraftType`, …).

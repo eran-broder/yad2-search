@@ -25,6 +25,7 @@ import {
   type Place,
 } from '../schemas/address.js';
 import { addressIndex, type BakedPlace } from '../data/address-index.js';
+import { normalizeName as normalize } from '../core/text.js';
 
 // These endpoints do not paginate — they return whatever `limit` allows and say nothing
 // about what was cut. At 1000 the city list stopped 454 rows short and omitted Tel Aviv,
@@ -88,14 +89,6 @@ const toLocation = (place: Place): SearchLocation =>
     street: place.street_id,
   });
 
-const SEPARATORS = /[,\-–]/g;
-// Dropped rather than spaced: Yad2 writes "Be'er Sheva" and מצפה אבי״ב, but people type
-// "Beer Sheva". Turning the mark into a space would split the word instead of closing it.
-const MARKS = /['"״׳`]/g;
-const WHITESPACE = /\s+/g;
-
-const normalize = (text: string): string =>
-  text.replace(MARKS, '').replace(SEPARATORS, ' ').replace(WHITESPACE, ' ').trim().toLowerCase();
 
 /**
  * How well a candidate answers the query, independent of how specific it is.
