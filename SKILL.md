@@ -130,8 +130,12 @@ See `${CLAUDE_SKILL_DIR}/references/api.md` for every parameter per vertical, an
   `additionalDetails.roomsCount` reports. A car's year is `vehicleDates.yearOfProduction`.
   `api.md` lists the common ones — for the rest, add `--paths` to any CLI command.
 - **`price: 0` means "call for price".** Pass `priceOnly: true` rather than filtering later.
-- **Release the browser before exiting**: `await using yad2 = createResilientClient()`, or
-  `await yad2.dispose()`. A bare `process.exit()` with a live page aborts Node on Windows.
+- **Field naming differs per vertical.** realestate/vehicles/projects use `.text`, market uses
+  `.textHeb`, and `address.*` plus `nearby` are snake_case (`hood_id`, `street_heb`). There is no
+  rule — check `--paths` rather than assuming.
+- **Never `process.exit()` with a live browser page** — on Windows it aborts Node with a
+  libuv assertion and turns a successful run into exit code 127. Scripts now end on their
+  own; `await using yad2 = …` or `await yad2.dispose()` frees the browser sooner.
 
 ## CLI
 

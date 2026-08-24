@@ -1,6 +1,7 @@
 import { createBrowserClient, ProjectPropertyType, VehicleCategory, range } from '../dist/index.js';
 
-const y2 = createBrowserClient({ port: Number(process.argv[2]) });
+const portArg = process.argv[2];
+const y2 = createBrowserClient(portArg ? { port: Number(portArg) } : {});
 
 let calls = 0;
 const started = Date.now();

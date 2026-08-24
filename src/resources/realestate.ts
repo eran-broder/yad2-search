@@ -1,7 +1,13 @@
 import type { ZodType } from 'zod';
 import type { Gateway } from '../core/gateway.js';
 import type { QueryParams } from '../core/query.js';
-import { RealestateBucket, RealestateDeal, RealestateView, Service } from '../core/enums/index.js';
+import {
+  ArgumentName,
+  RealestateBucket,
+  RealestateDeal,
+  RealestateView,
+  Service,
+} from '../core/enums/index.js';
 import {
   RealestateFeedSchema,
   RealestateMapSchema,
@@ -19,8 +25,10 @@ import {
 } from '../params/realestate.js';
 import { createFeed, type FeedResource } from './paged.js';
 import { dedupeBy, pickBuckets } from './buckets.js';
-import { parseParams } from '../core/params.js';
+import { parseEnumArg, parseParams } from '../core/params.js';
 import { withParams } from '../core/describable.js';
+
+const MAP_CONTEXT = 'realestate.map';
 
 const AD_BUCKETS = [
   RealestateBucket.Private,
@@ -63,7 +71,7 @@ export const createRealestateResource = (gateway: Gateway) => {
 
   const map = (deal: RealestateDeal, params: RealestateSearchParams): Promise<RealestateMap> =>
     gateway.getData(
-      path(deal, RealestateView.Map),
+      path(parseEnumArg(MAP_CONTEXT, ArgumentName.Deal, RealestateDeal, deal), RealestateView.Map),
       parseParams('realestate.map', RealestateSearchParamsSchema, params),
       RealestateMapSchema,
     );

@@ -39,9 +39,69 @@ export const describeParams = (fn) => {
         return [];
     return Object.entries(shape).map(([name, field]) => `${name}${isOptional(field) ? '' : REQUIRED_MARK}: ${describeType(field)}`);
 };
-const SIGNATURE = /^[^(]*\(([^)]*)\)/;
 const REST_PREFIX = '...';
 const PARAMS_ARGUMENT = 'params';
+const OPEN_PAREN = '(';
+const OPEN_BRACE = '{';
+const ASSIGN = '=';
+const COMMA = ',';
+const NESTING = { '(': 1, '[': 1, '{': 1, ')': -1, ']': -1, '}': -1 };
+const LEADING_IDENTIFIER = /^\s*([A-Za-z_$][\w$]*)/;
+/**
+ * The parameter list between the outermost parentheses. Scanning for balance rather than
+ * matching `[^)]*` matters because defaults nest: `(params, { maxChunks = N } = {})` would
+ * otherwise be truncated at the first inner brace.
+ */
+const parameterSource = (source) => {
+    const start = source.indexOf(OPEN_PAREN);
+    if (start === -1)
+        return '';
+    let depth = 0;
+    for (let i = start; i < source.length; i += 1) {
+        depth += NESTING[source[i]] ?? 0;
+        if (depth === 0)
+            return source.slice(start + 1, i);
+    }
+    return '';
+};
+/** Split on the commas that separate parameters, ignoring commas inside defaults. */
+const topLevelParts = (source) => {
+    const parts = [];
+    let depth = 0;
+    let current = '';
+    for (const char of source) {
+        if (char === COMMA && depth === 0) {
+            parts.push(current);
+            current = '';
+            continue;
+        }
+        depth += NESTING[char] ?? 0;
+        current += char;
+    }
+    parts.push(current);
+    return parts;
+};
+/** Everything before this parameter's own `=` default, ignoring `=` nested inside it. */
+const beforeDefault = (part) => {
+    let depth = 0;
+    for (let i = 0; i < part.length; i += 1) {
+        const char = part[i];
+        if (char === ASSIGN && depth === 0)
+            return part.slice(0, i);
+        depth += NESTING[char] ?? 0;
+    }
+    return part;
+};
+/** `{ maxChunks = N } = {}` reads as `{maxChunks}`, not as a truncated fragment. */
+const nameOf = (part) => {
+    const declared = beforeDefault(part).trim();
+    if (!declared.startsWith(OPEN_BRACE))
+        return declared;
+    const keys = topLevelParts(declared.slice(1, -1))
+        .map((entry) => LEADING_IDENTIFIER.exec(beforeDefault(entry))?.[1])
+        .filter((key) => key !== undefined);
+    return `${OPEN_BRACE}${keys.join(', ')}}`;
+};
 /**
  * Positional parameter names, read off the compiled source. Methods built by
  * `createFeed` carry a Zod schema instead; everything else — `images.save(url, path)`,
@@ -51,12 +111,11 @@ const PARAMS_ARGUMENT = 'params';
 export const describePositional = (fn) => {
     if (typeof fn !== 'function')
         return [];
-    const captured = SIGNATURE.exec(fn.toString())?.[1]?.trim();
+    const captured = parameterSource(fn.toString()).trim();
     if (!captured)
         return [];
-    return captured
-        .split(',')
-        .map((part) => part.split('=')[0].trim())
+    return topLevelParts(captured)
+        .map(nameOf)
         .filter((name) => name.length > 0 && !name.startsWith(REST_PREFIX));
 };
 /**

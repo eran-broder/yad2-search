@@ -78,8 +78,19 @@ const launch = async () => {
     process.once(ProcessEvent.Exit, reap);
     try {
         const port = await awaitReady(child);
-        child.stdout?.removeAllListeners();
+        // Once the server is up its stdio is only noise, but a piped stream is a referenced
+        // handle: leaving it attached keeps the parent's event loop alive, so a script that
+        // finished its work would sit there forever instead of exiting. Drain the streams so
+        // the child never blocks on a full buffer, then let go of them and of the child.
+        for (const stream of [child.stdout, child.stderr]) {
+            stream?.removeAllListeners();
+            stream?.resume();
+            // Typed as Readable, but a piped child stream is a Socket at runtime and that is
+            // the object holding the libuv handle reference.
+            stream?.unref?.();
+        }
         child.removeAllListeners(ProcessEvent.Close);
+        child.unref();
         return {
             port,
             stop: async () => {

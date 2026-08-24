@@ -3,7 +3,8 @@ import { mkdtemp } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
-const y2 = createResilientClient({ browser: { port: Number(process.argv[2]) } });
+const portArg = process.argv[2];
+const y2 = createResilientClient({ browser: portArg ? { port: Number(portArg) } : {} });
 const dir = await mkdtemp(join(tmpdir(), 'yad2-'));
 
 const feed = await y2.realestate.forSale.search({ region: 1, minRooms: 4 });

@@ -48,9 +48,14 @@ await using yad2 = createResilientClient();   // disposed automatically at scope
 try { … } finally { await yad2.dispose(); }
 ```
 
-Calling `process.exit()` while a page session is live aborts the Node runtime on Windows
-(a libuv `UV_HANDLE_CLOSING` assertion) and reports failure from a run that actually
-succeeded. `dispose()` is a no-op if no browser was ever started, so it is always safe.
+The server no longer holds the event loop open, so a script that finishes its work exits
+on its own and the browser is reaped with it. `dispose()` releases it at once instead of
+at process exit, which matters in a long-lived process or between phases of a job.
+
+What you must not do is call `process.exit()` while a page session is live: on Windows
+that aborts the Node runtime with a libuv `UV_HANDLE_CLOSING` assertion and reports
+failure from a run that actually succeeded. Let the process end naturally, or dispose
+first. `dispose()` is a no-op when no browser was started, so it is always safe.
 
 ## Apartments in a neighbourhood
 

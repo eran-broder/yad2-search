@@ -26,3 +26,8 @@ export declare enum QueryKey {
 export declare enum ResultType {
     Extended = "extended"
 }
+/** Names of positional arguments, for validation messages. */
+export declare enum ArgumentName {
+    Category = "category",
+    Deal = "deal"
+}

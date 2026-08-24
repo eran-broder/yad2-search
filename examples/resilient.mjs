@@ -1,7 +1,8 @@
 import { createResilientClient, CarTag, GearBox, range } from '../dist/index.js';
 
+const portArg = process.argv[2];
 const yad2 = createResilientClient({
-  browser: { port: Number(process.argv[2]) },
+  browser: portArg ? { port: Number(portArg) } : {},
   http: { minIntervalMs: 3000 },
 });
 

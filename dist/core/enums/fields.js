@@ -30,3 +30,9 @@ export var ResultType;
 (function (ResultType) {
     ResultType["Extended"] = "extended";
 })(ResultType || (ResultType = {}));
+/** Names of positional arguments, for validation messages. */
+export var ArgumentName;
+(function (ArgumentName) {
+    ArgumentName["Category"] = "category";
+    ArgumentName["Deal"] = "deal";
+})(ArgumentName || (ArgumentName = {}));

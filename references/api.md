@@ -122,6 +122,20 @@ Market ad (`market.*`) — note it uses `textHeb`, not `text`, for labels:
 Nearby (`nearby.*`): ads sit under `docs`, addresses use snake_case
 (`address.address_master_id`, `address.area.text_eng`) unlike every other vertical.
 
+**Address lists are snake_case too** — `address.cities`, `.hoods`, `.streets`, `.areas`,
+`.regions` return `city_id`/`city_heb`/`city_eng`, `hood_id`/`hood_heb`, `street_id`/`street_heb`,
+plus `title_text` and `full_title_text`. There is no `hoodId` or `hoodName`; asking for those
+gives you blank columns. Note `city_id` can be non-numeric (`"691P"`), which is why
+`EntityId` is `number | string`.
+
+Naming conventions differ per vertical and there is no rule to infer them from:
+
+| Vertical | Label field | Case |
+| --- | --- | --- |
+| realestate, vehicles, projects | `.text` | camelCase |
+| market | `.textHeb` | camelCase |
+| address, nearby | `_heb` / `_text` | snake_case |
+
 Neighbourhood survey: `hoodId`, `segmantList[].title`, `.score` (0–1), `.amountRespondents`.
 
 Project (`projects.*`): `metaData.projectName`, `metaData.companyDetails.name`,

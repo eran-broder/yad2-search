@@ -1,5 +1,6 @@
 import type { Gateway } from '../core/gateway.js';
-import { CatalogField, OptionsPath, VehicleCategory } from '../core/enums/index.js';
+import { ArgumentName, CatalogField, OptionsPath, VehicleCategory } from '../core/enums/index.js';
+import { parseEnumArg } from '../core/params.js';
 import {
   VehicleCatalogOptionsSchema,
   VehicleCatalogSchema,
@@ -20,6 +21,11 @@ const SPECIAL_TYPE_FIELD: Partial<Record<VehicleCategory, CatalogField>> = {
   [VehicleCategory.Other]: CatalogField.SpecialCategory,
 };
 
+const CATALOG_CONTEXT = 'catalog';
+
+const checked = (category: VehicleCategory): VehicleCategory =>
+  parseEnumArg(CATALOG_CONTEXT, ArgumentName.Category, VehicleCategory, category);
+
 const serviceFor = (category: VehicleCategory): string => `vehicles-${category}-catalog`;
 
 const entriesOf = (options: VehicleCatalogOptions, field: CatalogField): CatalogEntry[] => {
@@ -29,15 +35,15 @@ const entriesOf = (options: VehicleCatalogOptions, field: CatalogField): Catalog
 
 export const createCatalogResource = (gateway: Gateway) => {
   const catalog = (category: VehicleCategory, scope: CatalogScope = {}): Promise<VehicleCatalog> =>
-    gateway.getData(`/${serviceFor(category)}`, scope, VehicleCatalogSchema);
+    gateway.getData(`/${serviceFor(checked(category))}`, scope, VehicleCatalogSchema);
 
   const options = (category: VehicleCategory): Promise<VehicleCatalogOptions> =>
-    gateway.getData(`/${serviceFor(category)}${OptionsPath.Base}`, {}, VehicleCatalogOptionsSchema);
+    gateway.getData(`/${serviceFor(checked(category))}${OptionsPath.Base}`, {}, VehicleCatalogOptionsSchema);
 
   const manufacturers = async (
     category: VehicleCategory = VehicleCategory.Cars,
   ): Promise<CatalogEntry[]> => {
-    if (MODEL_CATEGORIES.has(category)) return (await catalog(category)).manufacturer ?? [];
+    if (MODEL_CATEGORIES.has(checked(category))) return (await catalog(category)).manufacturer ?? [];
     return entriesOf(await options(category), CatalogField.Manufacturer);
   };
 
@@ -45,19 +51,19 @@ export const createCatalogResource = (gateway: Gateway) => {
     manufacturer: number,
     category: VehicleCategory = VehicleCategory.Cars,
   ): Promise<CatalogModel[]> =>
-    MODEL_CATEGORIES.has(category) ? ((await catalog(category, { manufacturer })).model ?? []) : [];
+    MODEL_CATEGORIES.has(checked(category)) ? ((await catalog(category, { manufacturer })).model ?? []) : [];
 
   const subModels = async (
     manufacturer: number,
     model: number,
     category: VehicleCategory = VehicleCategory.Cars,
   ): Promise<CatalogModel[]> =>
-    MODEL_CATEGORIES.has(category)
+    MODEL_CATEGORIES.has(checked(category))
       ? ((await catalog(category, { manufacturer, model })).subModel ?? [])
       : [];
 
   const specialTypes = async (category: VehicleCategory): Promise<CatalogEntry[]> => {
-    const field = SPECIAL_TYPE_FIELD[category];
+    const field = SPECIAL_TYPE_FIELD[checked(category)];
     return field === undefined ? [] : entriesOf(await options(category), field);
   };
 

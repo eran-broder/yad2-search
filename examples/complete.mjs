@@ -9,8 +9,9 @@ import {
   flatten,
 } from '../dist/index.js';
 
+const portArg = process.argv[2];
 const y2 = createResilientClient({
-  browser: { port: Number(process.argv[2]) },
+  browser: portArg ? { port: Number(portArg) } : {},
   http: { minIntervalMs: 3000 },
 });
 

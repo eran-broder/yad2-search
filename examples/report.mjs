@@ -2,7 +2,7 @@ import { writeFile } from 'node:fs/promises';
 import { createBrowserClient, RealestateDeal, isFilterLabels } from '../dist/index.js';
 
 const [, , portArg, outArg] = process.argv;
-const y2 = createBrowserClient({ port: Number(portArg) });
+const y2 = createBrowserClient(portArg ? { port: Number(portArg) } : {});
 const out = outArg ?? 'carmelia.html';
 
 const AREA = { region: 5, city: 4000, neighborhood: 612 };
