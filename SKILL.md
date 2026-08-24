@@ -12,14 +12,23 @@ frequently counter-intuitive.
 ## Setup
 
 ```bash
-cd <skill-dir>
-npm install                     # dist/ is committed; `npm run build` only after editing src/
-npx playwright install chromium # one-time, ~115MB, needed for the browser transport
+cd <skill-dir> && npm install    # dist/ is committed; `npm run build` only after editing src/
 ```
 
-After that the browser transport is self-managing — `createBrowserClient()` with no arguments
-spawns and reuses its own server, and shuts it down with the process. Pass `{ port }` only to
-attach to a server you are already running.
+Playwright comes with the install, and the browser transport is self-managing —
+`createBrowserClient()` with no arguments spawns and reuses its own server and shuts it down with
+the process. Pass `{ port }` only to attach to a server you are already running.
+
+**If a search fails with `Yad2BrowserUnavailableError`,** Playwright's Chromium build is not on
+this machine. Tell the user what it costs and let them decide — it is a one-time ~115MB download:
+
+```bash
+npx playwright install chromium
+```
+
+Don't run it silently; a large download deserves a heads-up. Note that Playwright pins a browser
+build per version, so a machine with Playwright already installed can still be missing the exact
+build this one needs.
 
 Yad2's HTML front end sits behind Radware bot protection, but the JSON gateway does not — with
 one catch: **each client fingerprint gets a small request budget, then a sticky cooldown**. Node

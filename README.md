@@ -7,8 +7,13 @@ real estate, vehicles, new-construction projects and the second-hand marketplace
 
 ```bash
 git clone <repo-url> ~/.claude/skills/yad2-search
-cd ~/.claude/skills/yad2-search
-npm install
+cd ~/.claude/skills/yad2-search && npm install
+```
+
+Playwright is a dependency and the browser transport manages its own server. If Chromium for the
+pinned Playwright build isn't on the machine yet, one command adds it:
+
+```bash
 npx playwright install chromium   # one-time, ~115MB
 ```
 

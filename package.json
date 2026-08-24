@@ -28,6 +28,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "playwright-http-server": "^2.4.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -47,8 +48,5 @@
     "claude-code",
     "skill",
     "sdk"
-  ],
-  "optionalDependencies": {
-    "playwright-http-server": "^2.4.0"
-  }
+  ]
 }
