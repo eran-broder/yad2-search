@@ -1,5 +1,6 @@
 import { NearbyPath, Service } from '../core/enums/index.js';
 import { parseParams } from '../core/params.js';
+import { withParams, withRows } from '../core/describable.js';
 import { NearbyParamsSchema } from '../params/nearby.js';
 import { NearbyResultSchema } from '../schemas/nearby.js';
 import { collect } from './paginate.js';
@@ -25,8 +26,8 @@ export const createNearbyResource = (gateway) => {
         }
     }
     return {
-        search,
-        stream,
-        all: (params, options) => collect(stream(params, options)),
+        search: withParams(withRows(search, ((r) => r.docs)), NearbyParamsSchema),
+        stream: withParams(stream, NearbyParamsSchema),
+        all: withParams((params, options) => collect(stream(params, options)), NearbyParamsSchema),
     };
 };

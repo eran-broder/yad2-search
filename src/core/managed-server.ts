@@ -2,7 +2,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { Yad2Error } from './errors.js';
-import { ProcessEvent, StdioMode } from './enums/http.js';
+import { ProcessEvent, Signal, StdioMode } from './enums/http.js';
 
 export interface ManagedServer {
   readonly port: number;
@@ -83,8 +83,21 @@ const launch = async (): Promise<ManagedServer> => {
   }
 
   const child = spawn(process.execPath, [entry], { stdio: [StdioMode.Ignore, StdioMode.Pipe, StdioMode.Pipe] });
-  const kill = () => child.kill();
-  process.once(ProcessEvent.Exit, kill);
+  // child.kill() from inside an 'exit' handler trips a libuv assertion on Windows
+  // (UV_HANDLE_CLOSING in async.c) once a Chromium page session is live, turning a
+  // successful run into exit code 127. process.kill() signals the pid directly without
+  // touching the ChildProcess handle, so it is safe during teardown.
+  const reap = () => {
+    child.unref();
+    if (child.pid !== undefined && child.exitCode === null) {
+      try {
+        process.kill(child.pid, Signal.Kill);
+      } catch {
+        /* already gone */
+      }
+    }
+  };
+  process.once(ProcessEvent.Exit, reap);
 
   try {
     const port = await awaitReady(child);
@@ -94,7 +107,7 @@ const launch = async (): Promise<ManagedServer> => {
       port,
       stop: async () => {
         shared = null;
-        process.off(ProcessEvent.Exit, kill);
+        process.off(ProcessEvent.Exit, reap);
         child.kill();
       },
     };
@@ -107,4 +120,16 @@ const launch = async (): Promise<ManagedServer> => {
 export const sharedServer = (): Promise<ManagedServer> => {
   shared ??= launch();
   return shared;
+};
+
+/** Stop the shared server if one was ever started. Never spawns one just to shut it down. */
+export const disposeSharedServer = async (): Promise<void> => {
+  const pending = shared;
+  if (!pending) return;
+  await pending.then(
+    (server) => server.stop(),
+    () => {
+      shared = null;
+    },
+  );
 };

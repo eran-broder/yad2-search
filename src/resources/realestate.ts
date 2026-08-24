@@ -18,8 +18,9 @@ import {
   type RentSearchParams,
 } from '../params/realestate.js';
 import { createFeed, type FeedResource } from './paged.js';
-import { pickBuckets } from './buckets.js';
+import { dedupeBy, pickBuckets } from './buckets.js';
 import { parseParams } from '../core/params.js';
+import { withParams } from '../core/describable.js';
 
 const AD_BUCKETS = [
   RealestateBucket.Private,
@@ -28,15 +29,15 @@ const AD_BUCKETS = [
   RealestateBucket.Booster,
 ] as const;
 
+const tokenOf = (ad: RealestateAd): string => ad.token;
+
 export const flatten = (feed: RealestateFeed): RealestateAd[] =>
-  pickBuckets(feed, AD_BUCKETS);
+  dedupeBy(pickBuckets(feed, AD_BUCKETS), tokenOf);
 
 const toPage = (feed: RealestateFeed) => ({
   items: flatten(feed),
   totalPages: feed.pagination.totalPages,
 });
-
-const tokenOf = (ad: RealestateAd): string => ad.token;
 
 export type RealestateFeedResource<P extends QueryParams> = FeedResource<RealestateAd, P, RealestateFeed>;
 
@@ -74,6 +75,6 @@ export const createRealestateResource = (gateway: Gateway) => {
       RealestateDeal.Commercial,
       CommercialSearchParamsSchema,
     ),
-    map,
+    map: withParams(map, RealestateSearchParamsSchema),
   };
 };

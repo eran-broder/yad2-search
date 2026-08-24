@@ -25,7 +25,7 @@ import {
 } from '../params/vehicles.js';
 import { createFeed, type FeedResource } from './paged.js';
 import { parseParams } from '../core/params.js';
-import { pickBuckets } from './buckets.js';
+import { dedupeBy, pickBuckets } from './buckets.js';
 
 export type VehicleSearch<P extends QueryParams> = FeedResource<VehicleAd, P, VehicleFeed>;
 
@@ -38,7 +38,7 @@ const BUCKETS = [
 ] as const;
 
 const flattenBuckets = (feed: VehicleBucketedFeed): VehicleFeed => ({
-  ads: pickBuckets(feed, BUCKETS),
+  ads: dedupeBy(pickBuckets(feed, BUCKETS), (ad) => ad.token),
   pagination: feed.pagination,
 });
 

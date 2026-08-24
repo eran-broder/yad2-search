@@ -3,7 +3,7 @@ import { VehicleBucketedFeedSchema, VehicleFeedSchema, } from '../schemas/vehicl
 import { CarSearchParamsSchema, MotorcycleSearchParamsSchema, OtherVehicleSearchParamsSchema, ScooterSearchParamsSchema, TruckSearchParamsSchema, WatercraftSearchParamsSchema, } from '../params/vehicles.js';
 import { createFeed } from './paged.js';
 import { parseParams } from '../core/params.js';
-import { pickBuckets } from './buckets.js';
+import { dedupeBy, pickBuckets } from './buckets.js';
 const BUCKETS = [
     VehicleBucket.Private,
     VehicleBucket.Commercial,
@@ -12,7 +12,7 @@ const BUCKETS = [
     VehicleBucket.Solo,
 ];
 const flattenBuckets = (feed) => ({
-    ads: pickBuckets(feed, BUCKETS),
+    ads: dedupeBy(pickBuckets(feed, BUCKETS), (ad) => ad.token),
     pagination: feed.pagination,
 });
 const toPage = (feed) => ({

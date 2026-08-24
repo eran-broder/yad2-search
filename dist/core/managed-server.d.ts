@@ -8,3 +8,5 @@ export declare class Yad2BrowserUnavailableError extends Yad2Error {
     constructor(detail: string);
 }
 export declare const sharedServer: () => Promise<ManagedServer>;
+/** Stop the shared server if one was ever started. Never spawns one just to shut it down. */
+export declare const disposeSharedServer: () => Promise<void>;

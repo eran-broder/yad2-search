@@ -17,6 +17,7 @@ import { createImagesResource } from './resources/images.js';
 import { createLabelsResource } from './resources/labels.js';
 import { createNeighborhoodResource } from './resources/neighborhood.js';
 import { createNearbyResource } from './resources/nearby.js';
+import { disposeSharedServer } from './core/managed-server.js';
 
 export interface Yad2ClientOptions {
   readonly transport?: Transport;
@@ -24,6 +25,15 @@ export interface Yad2ClientOptions {
 }
 
 const buildResources = (gateway: Gateway) => ({
+  /**
+   * Release the auto-spawned browser server, if one was started. Call it before the
+   * process ends — a bare `process.exit()` with a live Chromium session aborts the
+   * runtime on Windows. `await using` handles this for you.
+   */
+  dispose: disposeSharedServer,
+  // `await using` support, but only where the runtime has the symbol (Node 20+).
+  // A computed `undefined` key on older Node would create a stray "undefined" property.
+  ...(typeof Symbol.asyncDispose === 'symbol' ? { [Symbol.asyncDispose]: disposeSharedServer } : {}),
   vehicles: createVehiclesResource(gateway),
   realestate: createRealestateResource(gateway),
   market: createMarketResource(gateway),

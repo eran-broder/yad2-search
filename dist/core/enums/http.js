@@ -26,3 +26,12 @@ export var StdioMode;
     StdioMode["Ignore"] = "ignore";
     StdioMode["Pipe"] = "pipe";
 })(StdioMode || (StdioMode = {}));
+export var Signal;
+(function (Signal) {
+    Signal["Kill"] = "SIGKILL";
+})(Signal || (Signal = {}));
+/** Client members that are lifecycle helpers rather than part of the search surface. */
+export var ClientLifecycle;
+(function (ClientLifecycle) {
+    ClientLifecycle["Dispose"] = "dispose";
+})(ClientLifecycle || (ClientLifecycle = {}));

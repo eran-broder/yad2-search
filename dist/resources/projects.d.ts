@@ -2,11 +2,11 @@ import type { Gateway } from '../core/gateway.js';
 import { type Developer, type Listing, type Project } from '../schemas/projects/index.js';
 import { type DeveloperFeedParams, type DeveloperListParams, type ProjectListParams, type ProjectListingParams } from '../params/projects.js';
 export declare const createProjectsResource: (gateway: Gateway) => {
-    list: (params?: ProjectListParams) => Promise<Project[]>;
-    map: (params?: ProjectListParams) => Promise<Project[]>;
-    listings: (params?: ProjectListingParams) => Promise<Listing[]>;
-    developers: (params?: DeveloperListParams) => Promise<Developer[]>;
-    developerFeed: (params?: DeveloperFeedParams) => Promise<{
+    list: import("../core/describable.js").Describable<(params?: ProjectListParams) => Promise<Project[]>>;
+    map: import("../core/describable.js").Describable<(params?: ProjectListParams) => Promise<Project[]>>;
+    listings: import("../core/describable.js").Describable<(params?: ProjectListingParams) => Promise<Listing[]>>;
+    developers: import("../core/describable.js").Describable<(params?: DeveloperListParams) => Promise<Developer[]>>;
+    developerFeed: import("../core/describable.js").Describable<(params?: DeveloperFeedParams) => Promise<{
         developers: {
             id: string;
             name?: string | undefined;
@@ -16,7 +16,7 @@ export declare const createProjectsResource: (gateway: Gateway) => {
             projectCount?: string | undefined;
         }[];
         total?: number | undefined;
-    }>;
+    }>>;
     autocomplete: (phrase: string) => Promise<Project[]>;
     search(params?: {
         immediateOccupancy?: boolean | undefined;

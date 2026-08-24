@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { disposeSharedServer, sharedServer } from '../dist/core/managed-server.js';
 
 const run = promisify(execFile);
 const CHECK_TIMEOUT_MS = 300000;
@@ -14,7 +15,12 @@ const summarize = (stdout) =>
     .slice(-2)
     .map((line) => line.trim())
     .join(' · ');
-const port = process.argv[2] ?? process.env.PWHS_PORT;
+// Every check needs a browser. Start one server here and share its port rather than
+// letting eight child processes each spawn (and pay for) their own Chromium.
+// Passing `undefined` through execFile would arrive as the string "undefined" and
+// resolve to port NaN, so only forward a port we actually have.
+const port = process.argv[2] ?? process.env.PWHS_PORT ?? String((await sharedServer()).port);
+const argsFor = (script) => [script, port];
 
 
 const CHECKS = [
@@ -33,7 +39,7 @@ let failed = 0;
 for (const [label, script, pattern, expected] of CHECKS) {
   const started = Date.now();
   try {
-    const { stdout } = await run('node', [script, port], {
+    const { stdout } = await run('node', argsFor(script), {
       maxBuffer: 32 * 1024 * 1024,
       timeout: CHECK_TIMEOUT_MS,
     });
@@ -49,5 +55,7 @@ for (const [label, script, pattern, expected] of CHECKS) {
   }
 }
 
+await disposeSharedServer();
+
 console.log(failed === 0 ? '\nALL CHECKS PASSED' : `\n${failed} CHECK(S) FAILED`);
-process.exit(failed === 0 ? 0 : 1);
+process.exitCode = failed === 0 ? 0 : 1;

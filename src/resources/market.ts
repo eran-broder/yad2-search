@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { Gateway } from '../core/gateway.js';
 import { MarketPath, QueryKey, Service } from '../core/enums/index.js';
 import { parseParams } from '../core/params.js';
+import { withParams, withRows, type RowsOf } from '../core/describable.js';
 import {
   MarketAutocompleteSchema,
   MarketFiltersSchema,
@@ -59,5 +60,15 @@ export const createMarketResource = (gateway: Gateway, options: MarketResourceOp
   const menuItems = (): Promise<MarketMenuItem[]> =>
     gateway.get(path(MarketPath.MenuItems), {}, z.array(MarketMenuItemSchema));
 
-  return { search, collection, filters, collectionFilters, autocomplete, menuItems };
+  // The ads live under `items`; column output should reach them, not the envelope.
+  const marketRows = ((result: MarketResult) => result.items ?? []) as RowsOf;
+
+  return {
+    search: withParams(withRows(search, marketRows), MarketSearchParamsSchema),
+    collection: withParams(withRows(collection, marketRows), MarketCollectionParamsSchema),
+    filters,
+    collectionFilters,
+    autocomplete,
+    menuItems,
+  };
 };

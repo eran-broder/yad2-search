@@ -5,9 +5,9 @@ export interface NearbyStreamOptions {
     readonly maxChunks?: number;
 }
 export declare const createNearbyResource: (gateway: Gateway) => {
-    search: (params: NearbyParams) => Promise<NearbyResult>;
-    stream: (params: NearbyParams, { maxChunks }?: NearbyStreamOptions) => AsyncGenerator<NearbyDoc>;
-    all: (params: NearbyParams, options?: NearbyStreamOptions) => Promise<{
+    search: import("../core/describable.js").Describable<(params: NearbyParams) => Promise<NearbyResult>>;
+    stream: import("../core/describable.js").Describable<(params: NearbyParams, { maxChunks }?: NearbyStreamOptions) => AsyncGenerator<NearbyDoc>>;
+    all: import("../core/describable.js").Describable<(params: NearbyParams, options?: NearbyStreamOptions) => Promise<{
         token: string;
         order_id?: number | undefined;
         category_id?: number | undefined;
@@ -93,5 +93,5 @@ export declare const createNearbyResource: (gateway: Gateway) => {
                 text_eng?: string | null | undefined;
             } | null | undefined;
         } | null | undefined;
-    }[]>;
+    }[]>>;
 };

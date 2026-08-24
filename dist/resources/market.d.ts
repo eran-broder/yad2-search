@@ -7,8 +7,8 @@ export interface MarketResourceOptions {
 }
 export type MarketResult = z.infer<typeof MarketSearchSchema>;
 export declare const createMarketResource: (gateway: Gateway, options?: MarketResourceOptions) => {
-    search: (params: MarketSearchParams) => Promise<MarketResult>;
-    collection: (name: string, params?: MarketCollectionParams) => Promise<MarketResult>;
+    search: import("../core/describable.js").Describable<(params: MarketSearchParams) => Promise<MarketResult>>;
+    collection: import("../core/describable.js").Describable<(name: string, params?: MarketCollectionParams) => Promise<MarketResult>>;
     filters: (q: string) => Promise<MarketFilters>;
     collectionFilters: (name: string) => Promise<MarketFilters>;
     autocomplete: (searchTerm: string) => Promise<MarketAutocomplete>;

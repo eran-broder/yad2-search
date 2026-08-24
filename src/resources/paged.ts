@@ -1,6 +1,6 @@
 import type { ZodType } from 'zod';
 import { paginate, collect, type PaginateOptions, type Page } from './paginate.js';
-import { withParams } from '../core/describable.js';
+import { withParams, withRows, type RowsOf } from '../core/describable.js';
 
 export interface PagedResource<T, P> {
   stream(params?: P, options?: PaginateOptions): AsyncGenerator<T>;
@@ -29,7 +29,15 @@ export const createFeed = <T, P extends object, R>(
 
   const all = (params?: P, options?: PaginateOptions) => collect(stream(params, options));
 
+  // `search` hands back the raw feed; record the way into its listings so column
+  // output does not have to guess which buckets hold ads.
+  const described = withRows(search, ((feed: R) => toPage(feed).items) as RowsOf);
+
   return schema
-    ? { search: withParams(search, schema), stream: withParams(stream, schema), all: withParams(all, schema) }
-    : { search, stream, all };
+    ? {
+        search: withParams(described, schema),
+        stream: withParams(stream, schema),
+        all: withParams(all, schema),
+      }
+    : { search: described, stream, all };
 };

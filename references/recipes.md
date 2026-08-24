@@ -7,10 +7,50 @@ import {
   createResilientClient, flatten, range,
   CarTag, CommercialDealType, GearBox, MarketCondition,
   PropertyCondition, ResidentialProperty, Yad2Category,
-} from 'yad2-sdk';
+} from 'yad2-search';
 
-const yad2 = createResilientClient();   // spawns and manages its own browser
+await using yad2 = createResilientClient();   // spawns and manages its own browser
 ```
+
+## Running a one-off script
+
+The skill is not linked into your project's `node_modules`, so the bare `yad2-search`
+specifier above only resolves from inside the skill directory. Either put your script
+there and import `'../dist/index.js'`, or load it by file URL from anywhere:
+
+```js
+import { pathToFileURL } from 'node:url';
+
+const SKILL_DIR = process.env.CLAUDE_SKILL_DIR ?? '<path to this skill>';
+const { createResilientClient } = await import(
+  pathToFileURL(`${SKILL_DIR}/dist/index.js`).href
+);
+
+const yad2 = createResilientClient();
+try {
+  // ... your queries
+} finally {
+  await yad2.dispose();     // release the browser; see "Shutting down" below
+}
+```
+
+An absolute Windows path (`C:/...`) is **not** a valid ESM specifier — `import()` needs a
+real `file://` URL, which is what `pathToFileURL` produces.
+
+## Shutting down
+
+`createBrowserClient()` and `createResilientClient()` may spawn a Chromium server. Release it
+before the process ends:
+
+```ts
+await using yad2 = createResilientClient();   // disposed automatically at scope exit
+// or, without `await using`:
+try { … } finally { await yad2.dispose(); }
+```
+
+Calling `process.exit()` while a page session is live aborts the Node runtime on Windows
+(a libuv `UV_HANDLE_CLOSING` assertion) and reports failure from a run that actually
+succeeded. `dispose()` is a no-op if no browser was ever started, so it is always safe.
 
 ## Apartments in a neighbourhood
 
@@ -128,7 +168,7 @@ const docs = await yad2.nearby.all(
 ## Neighbourhood quality
 
 ```ts
-import { scoreBySegment, NeighborhoodSegment } from 'yad2-sdk';
+import { scoreBySegment, NeighborhoodSegment } from 'yad2-search';
 
 const survey = await yad2.neighborhood.survey(where.neighborhood);
 const scores = scoreBySegment(survey);
@@ -138,7 +178,7 @@ scores[NeighborhoodSegment.Safety];
 ## Human-readable filter summary
 
 ```ts
-import { isFilterLabels } from 'yad2-sdk';
+import { isFilterLabels } from 'yad2-search';
 
 const labels = await yad2.labels.realestate(RealestateDeal.ForSale, where);
 const title = Object.values(labels).filter(isFilterLabels)
@@ -171,7 +211,7 @@ homes
 ## Handling failures
 
 ```ts
-import { Yad2BlockedError, Yad2ParamsError, Yad2NotFoundError } from 'yad2-sdk';
+import { Yad2BlockedError, Yad2ParamsError, Yad2NotFoundError } from 'yad2-search';
 
 try { … } catch (error) {
   if (error instanceof Yad2ParamsError) …   // bad filter — the message names the field

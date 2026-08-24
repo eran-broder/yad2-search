@@ -118,5 +118,5 @@ export declare const createRealestateResource: (gateway: Gateway) => {
         loadingRamp?: boolean | undefined;
         coolingRoom?: boolean | undefined;
     }>;
-    map: (deal: RealestateDeal, params: RealestateSearchParams) => Promise<RealestateMap>;
+    map: import("../core/describable.js").Describable<(deal: RealestateDeal, params: RealestateSearchParams) => Promise<RealestateMap>>;
 };

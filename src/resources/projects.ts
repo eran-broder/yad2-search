@@ -25,6 +25,7 @@ import {
 } from '../params/projects.js';
 import { createFeed, type FeedResource } from './paged.js';
 import { parseParams } from '../core/params.js';
+import { withParams } from '../core/describable.js';
 
 const PAGE_SIZE = 18;
 
@@ -80,5 +81,13 @@ export const createProjectsResource = (gateway: Gateway) => {
       .getData(path(Yad1Path.ProjectsAutocomplete), { phrase }, ProjectListSchema)
       .then((r) => r.projects);
 
-  return { ...feed, list, map, listings, developers, developerFeed, autocomplete };
+  return {
+    ...feed,
+    list: withParams(list, ProjectListParamsSchema),
+    map: withParams(map, ProjectListParamsSchema),
+    listings: withParams(listings, ProjectListingParamsSchema),
+    developers: withParams(developers, DeveloperListParamsSchema),
+    developerFeed: withParams(developerFeed, DeveloperFeedParamsSchema),
+    autocomplete,
+  };
 };

@@ -121,22 +121,22 @@ export declare const createYad2Client: (options?: Yad2ClientOptions) => {
             loadingRamp?: boolean | undefined;
             coolingRoom?: boolean | undefined;
         }>;
-        map: (deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>;
+        map: import("./core/describable.js").Describable<(deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>>;
     };
     market: {
-        search: (params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>;
-        collection: (name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>;
+        search: import("./core/describable.js").Describable<(params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>>;
+        collection: import("./core/describable.js").Describable<(name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>>;
         filters: (q: string) => Promise<import("./index.js").MarketFilters>;
         collectionFilters: (name: string) => Promise<import("./index.js").MarketFilters>;
         autocomplete: (searchTerm: string) => Promise<import("./index.js").MarketAutocomplete>;
         menuItems: () => Promise<import("./index.js").MarketMenuItem[]>;
     };
     projects: {
-        list: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        map: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        listings: (params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>;
-        developers: (params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>;
-        developerFeed: (params?: import("./index.js").DeveloperFeedParams) => Promise<{
+        list: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        map: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        listings: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>>;
+        developers: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>>;
+        developerFeed: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperFeedParams) => Promise<{
             developers: {
                 id: string;
                 name?: string | undefined;
@@ -146,7 +146,7 @@ export declare const createYad2Client: (options?: Yad2ClientOptions) => {
                 projectCount?: string | undefined;
             }[];
             total?: number | undefined;
-        }>;
+        }>>;
         autocomplete: (phrase: string) => Promise<import("./index.js").Project[]>;
         search(params?: {
             immediateOccupancy?: boolean | undefined;
@@ -978,9 +978,9 @@ export declare const createYad2Client: (options?: Yad2ClientOptions) => {
         suggestions: (query: string) => Promise<import("./index.js").SearchSuggestions>;
     };
     nearby: {
-        search: (params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>;
-        stream: (params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>;
-        all: (params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
+        search: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>>;
+        stream: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>>;
+        all: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
             token: string;
             order_id?: number | undefined;
             category_id?: number | undefined;
@@ -1066,8 +1066,15 @@ export declare const createYad2Client: (options?: Yad2ClientOptions) => {
                     text_eng?: string | null | undefined;
                 } | null | undefined;
             } | null | undefined;
-        }[]>;
+        }[]>>;
     };
+    [Symbol.asyncDispose]?: () => Promise<void>;
+    /**
+     * Release the auto-spawned browser server, if one was started. Call it before the
+     * process ends — a bare `process.exit()` with a live Chromium session aborts the
+     * runtime on Windows. `await using` handles this for you.
+     */
+    dispose: () => Promise<void>;
 };
 export declare const createHttpClient: (options?: FetchTransportOptions) => {
     vehicles: import("./resources/vehicles.js").VehiclesResource;
@@ -1183,22 +1190,22 @@ export declare const createHttpClient: (options?: FetchTransportOptions) => {
             loadingRamp?: boolean | undefined;
             coolingRoom?: boolean | undefined;
         }>;
-        map: (deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>;
+        map: import("./core/describable.js").Describable<(deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>>;
     };
     market: {
-        search: (params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>;
-        collection: (name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>;
+        search: import("./core/describable.js").Describable<(params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>>;
+        collection: import("./core/describable.js").Describable<(name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>>;
         filters: (q: string) => Promise<import("./index.js").MarketFilters>;
         collectionFilters: (name: string) => Promise<import("./index.js").MarketFilters>;
         autocomplete: (searchTerm: string) => Promise<import("./index.js").MarketAutocomplete>;
         menuItems: () => Promise<import("./index.js").MarketMenuItem[]>;
     };
     projects: {
-        list: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        map: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        listings: (params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>;
-        developers: (params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>;
-        developerFeed: (params?: import("./index.js").DeveloperFeedParams) => Promise<{
+        list: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        map: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        listings: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>>;
+        developers: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>>;
+        developerFeed: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperFeedParams) => Promise<{
             developers: {
                 id: string;
                 name?: string | undefined;
@@ -1208,7 +1215,7 @@ export declare const createHttpClient: (options?: FetchTransportOptions) => {
                 projectCount?: string | undefined;
             }[];
             total?: number | undefined;
-        }>;
+        }>>;
         autocomplete: (phrase: string) => Promise<import("./index.js").Project[]>;
         search(params?: {
             immediateOccupancy?: boolean | undefined;
@@ -2040,9 +2047,9 @@ export declare const createHttpClient: (options?: FetchTransportOptions) => {
         suggestions: (query: string) => Promise<import("./index.js").SearchSuggestions>;
     };
     nearby: {
-        search: (params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>;
-        stream: (params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>;
-        all: (params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
+        search: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>>;
+        stream: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>>;
+        all: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
             token: string;
             order_id?: number | undefined;
             category_id?: number | undefined;
@@ -2128,8 +2135,15 @@ export declare const createHttpClient: (options?: FetchTransportOptions) => {
                     text_eng?: string | null | undefined;
                 } | null | undefined;
             } | null | undefined;
-        }[]>;
+        }[]>>;
     };
+    [Symbol.asyncDispose]?: () => Promise<void>;
+    /**
+     * Release the auto-spawned browser server, if one was started. Call it before the
+     * process ends — a bare `process.exit()` with a live Chromium session aborts the
+     * runtime on Windows. `await using` handles this for you.
+     */
+    dispose: () => Promise<void>;
 };
 export declare const createCurlClient: (options?: CurlTransportOptions) => {
     vehicles: import("./resources/vehicles.js").VehiclesResource;
@@ -2245,22 +2259,22 @@ export declare const createCurlClient: (options?: CurlTransportOptions) => {
             loadingRamp?: boolean | undefined;
             coolingRoom?: boolean | undefined;
         }>;
-        map: (deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>;
+        map: import("./core/describable.js").Describable<(deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>>;
     };
     market: {
-        search: (params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>;
-        collection: (name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>;
+        search: import("./core/describable.js").Describable<(params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>>;
+        collection: import("./core/describable.js").Describable<(name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>>;
         filters: (q: string) => Promise<import("./index.js").MarketFilters>;
         collectionFilters: (name: string) => Promise<import("./index.js").MarketFilters>;
         autocomplete: (searchTerm: string) => Promise<import("./index.js").MarketAutocomplete>;
         menuItems: () => Promise<import("./index.js").MarketMenuItem[]>;
     };
     projects: {
-        list: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        map: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        listings: (params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>;
-        developers: (params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>;
-        developerFeed: (params?: import("./index.js").DeveloperFeedParams) => Promise<{
+        list: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        map: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        listings: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>>;
+        developers: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>>;
+        developerFeed: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperFeedParams) => Promise<{
             developers: {
                 id: string;
                 name?: string | undefined;
@@ -2270,7 +2284,7 @@ export declare const createCurlClient: (options?: CurlTransportOptions) => {
                 projectCount?: string | undefined;
             }[];
             total?: number | undefined;
-        }>;
+        }>>;
         autocomplete: (phrase: string) => Promise<import("./index.js").Project[]>;
         search(params?: {
             immediateOccupancy?: boolean | undefined;
@@ -3102,9 +3116,9 @@ export declare const createCurlClient: (options?: CurlTransportOptions) => {
         suggestions: (query: string) => Promise<import("./index.js").SearchSuggestions>;
     };
     nearby: {
-        search: (params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>;
-        stream: (params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>;
-        all: (params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
+        search: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>>;
+        stream: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>>;
+        all: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
             token: string;
             order_id?: number | undefined;
             category_id?: number | undefined;
@@ -3190,8 +3204,15 @@ export declare const createCurlClient: (options?: CurlTransportOptions) => {
                     text_eng?: string | null | undefined;
                 } | null | undefined;
             } | null | undefined;
-        }[]>;
+        }[]>>;
     };
+    [Symbol.asyncDispose]?: () => Promise<void>;
+    /**
+     * Release the auto-spawned browser server, if one was started. Call it before the
+     * process ends — a bare `process.exit()` with a live Chromium session aborts the
+     * runtime on Windows. `await using` handles this for you.
+     */
+    dispose: () => Promise<void>;
 };
 export interface NodeClientOptions {
     readonly fetch?: FetchTransportOptions;
@@ -3311,22 +3332,22 @@ export declare const createNodeClient: ({ fetch, curl }?: NodeClientOptions) => 
             loadingRamp?: boolean | undefined;
             coolingRoom?: boolean | undefined;
         }>;
-        map: (deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>;
+        map: import("./core/describable.js").Describable<(deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>>;
     };
     market: {
-        search: (params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>;
-        collection: (name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>;
+        search: import("./core/describable.js").Describable<(params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>>;
+        collection: import("./core/describable.js").Describable<(name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>>;
         filters: (q: string) => Promise<import("./index.js").MarketFilters>;
         collectionFilters: (name: string) => Promise<import("./index.js").MarketFilters>;
         autocomplete: (searchTerm: string) => Promise<import("./index.js").MarketAutocomplete>;
         menuItems: () => Promise<import("./index.js").MarketMenuItem[]>;
     };
     projects: {
-        list: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        map: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        listings: (params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>;
-        developers: (params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>;
-        developerFeed: (params?: import("./index.js").DeveloperFeedParams) => Promise<{
+        list: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        map: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        listings: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>>;
+        developers: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>>;
+        developerFeed: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperFeedParams) => Promise<{
             developers: {
                 id: string;
                 name?: string | undefined;
@@ -3336,7 +3357,7 @@ export declare const createNodeClient: ({ fetch, curl }?: NodeClientOptions) => 
                 projectCount?: string | undefined;
             }[];
             total?: number | undefined;
-        }>;
+        }>>;
         autocomplete: (phrase: string) => Promise<import("./index.js").Project[]>;
         search(params?: {
             immediateOccupancy?: boolean | undefined;
@@ -4168,9 +4189,9 @@ export declare const createNodeClient: ({ fetch, curl }?: NodeClientOptions) => 
         suggestions: (query: string) => Promise<import("./index.js").SearchSuggestions>;
     };
     nearby: {
-        search: (params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>;
-        stream: (params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>;
-        all: (params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
+        search: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>>;
+        stream: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>>;
+        all: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
             token: string;
             order_id?: number | undefined;
             category_id?: number | undefined;
@@ -4256,8 +4277,15 @@ export declare const createNodeClient: ({ fetch, curl }?: NodeClientOptions) => 
                     text_eng?: string | null | undefined;
                 } | null | undefined;
             } | null | undefined;
-        }[]>;
+        }[]>>;
     };
+    [Symbol.asyncDispose]?: () => Promise<void>;
+    /**
+     * Release the auto-spawned browser server, if one was started. Call it before the
+     * process ends — a bare `process.exit()` with a live Chromium session aborts the
+     * runtime on Windows. `await using` handles this for you.
+     */
+    dispose: () => Promise<void>;
 };
 export declare const createBrowserClient: (options?: BrowserTransportOptions) => {
     vehicles: import("./resources/vehicles.js").VehiclesResource;
@@ -4373,22 +4401,22 @@ export declare const createBrowserClient: (options?: BrowserTransportOptions) =>
             loadingRamp?: boolean | undefined;
             coolingRoom?: boolean | undefined;
         }>;
-        map: (deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>;
+        map: import("./core/describable.js").Describable<(deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>>;
     };
     market: {
-        search: (params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>;
-        collection: (name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>;
+        search: import("./core/describable.js").Describable<(params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>>;
+        collection: import("./core/describable.js").Describable<(name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>>;
         filters: (q: string) => Promise<import("./index.js").MarketFilters>;
         collectionFilters: (name: string) => Promise<import("./index.js").MarketFilters>;
         autocomplete: (searchTerm: string) => Promise<import("./index.js").MarketAutocomplete>;
         menuItems: () => Promise<import("./index.js").MarketMenuItem[]>;
     };
     projects: {
-        list: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        map: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        listings: (params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>;
-        developers: (params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>;
-        developerFeed: (params?: import("./index.js").DeveloperFeedParams) => Promise<{
+        list: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        map: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        listings: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>>;
+        developers: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>>;
+        developerFeed: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperFeedParams) => Promise<{
             developers: {
                 id: string;
                 name?: string | undefined;
@@ -4398,7 +4426,7 @@ export declare const createBrowserClient: (options?: BrowserTransportOptions) =>
                 projectCount?: string | undefined;
             }[];
             total?: number | undefined;
-        }>;
+        }>>;
         autocomplete: (phrase: string) => Promise<import("./index.js").Project[]>;
         search(params?: {
             immediateOccupancy?: boolean | undefined;
@@ -5230,9 +5258,9 @@ export declare const createBrowserClient: (options?: BrowserTransportOptions) =>
         suggestions: (query: string) => Promise<import("./index.js").SearchSuggestions>;
     };
     nearby: {
-        search: (params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>;
-        stream: (params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>;
-        all: (params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
+        search: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>>;
+        stream: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>>;
+        all: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
             token: string;
             order_id?: number | undefined;
             category_id?: number | undefined;
@@ -5318,8 +5346,15 @@ export declare const createBrowserClient: (options?: BrowserTransportOptions) =>
                     text_eng?: string | null | undefined;
                 } | null | undefined;
             } | null | undefined;
-        }[]>;
+        }[]>>;
     };
+    [Symbol.asyncDispose]?: () => Promise<void>;
+    /**
+     * Release the auto-spawned browser server, if one was started. Call it before the
+     * process ends — a bare `process.exit()` with a live Chromium session aborts the
+     * runtime on Windows. `await using` handles this for you.
+     */
+    dispose: () => Promise<void>;
 };
 export interface ResilientClientOptions {
     readonly browser?: BrowserTransportOptions;
@@ -5441,22 +5476,22 @@ export declare const createResilientClient: ({ browser, http, curl, retry, }?: R
             loadingRamp?: boolean | undefined;
             coolingRoom?: boolean | undefined;
         }>;
-        map: (deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>;
+        map: import("./core/describable.js").Describable<(deal: import("./index.js").RealestateDeal, params: import("./index.js").RealestateSearchParams) => Promise<import("./index.js").RealestateMap>>;
     };
     market: {
-        search: (params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>;
-        collection: (name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>;
+        search: import("./core/describable.js").Describable<(params: import("./index.js").MarketSearchParams) => Promise<import("./resources/market.js").MarketResult>>;
+        collection: import("./core/describable.js").Describable<(name: string, params?: import("./index.js").MarketCollectionParams) => Promise<import("./resources/market.js").MarketResult>>;
         filters: (q: string) => Promise<import("./index.js").MarketFilters>;
         collectionFilters: (name: string) => Promise<import("./index.js").MarketFilters>;
         autocomplete: (searchTerm: string) => Promise<import("./index.js").MarketAutocomplete>;
         menuItems: () => Promise<import("./index.js").MarketMenuItem[]>;
     };
     projects: {
-        list: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        map: (params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>;
-        listings: (params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>;
-        developers: (params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>;
-        developerFeed: (params?: import("./index.js").DeveloperFeedParams) => Promise<{
+        list: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        map: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListParams) => Promise<import("./index.js").Project[]>>;
+        listings: import("./core/describable.js").Describable<(params?: import("./index.js").ProjectListingParams) => Promise<import("./index.js").Listing[]>>;
+        developers: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperListParams) => Promise<import("./index.js").Developer[]>>;
+        developerFeed: import("./core/describable.js").Describable<(params?: import("./index.js").DeveloperFeedParams) => Promise<{
             developers: {
                 id: string;
                 name?: string | undefined;
@@ -5466,7 +5501,7 @@ export declare const createResilientClient: ({ browser, http, curl, retry, }?: R
                 projectCount?: string | undefined;
             }[];
             total?: number | undefined;
-        }>;
+        }>>;
         autocomplete: (phrase: string) => Promise<import("./index.js").Project[]>;
         search(params?: {
             immediateOccupancy?: boolean | undefined;
@@ -6298,9 +6333,9 @@ export declare const createResilientClient: ({ browser, http, curl, retry, }?: R
         suggestions: (query: string) => Promise<import("./index.js").SearchSuggestions>;
     };
     nearby: {
-        search: (params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>;
-        stream: (params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>;
-        all: (params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
+        search: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams) => Promise<import("./index.js").NearbyResult>>;
+        stream: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, { maxChunks }?: import("./resources/nearby.js").NearbyStreamOptions) => AsyncGenerator<import("./index.js").NearbyDoc>>;
+        all: import("./core/describable.js").Describable<(params: import("./index.js").NearbyParams, options?: import("./resources/nearby.js").NearbyStreamOptions) => Promise<{
             token: string;
             order_id?: number | undefined;
             category_id?: number | undefined;
@@ -6386,7 +6421,14 @@ export declare const createResilientClient: ({ browser, http, curl, retry, }?: R
                     text_eng?: string | null | undefined;
                 } | null | undefined;
             } | null | undefined;
-        }[]>;
+        }[]>>;
     };
+    [Symbol.asyncDispose]?: () => Promise<void>;
+    /**
+     * Release the auto-spawned browser server, if one was started. Call it before the
+     * process ends — a bare `process.exit()` with a live Chromium session aborts the
+     * runtime on Windows. `await using` handles this for you.
+     */
+    dispose: () => Promise<void>;
 };
 export type Yad2Client = ReturnType<typeof createYad2Client>;

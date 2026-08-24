@@ -15,7 +15,9 @@ export class Yad2BlockedError extends Yad2Error {
     path;
     constructor(path) {
         super(`Yad2 bot protection challenged the request to ${path}. ` +
-            `Slow the request rate, or switch to the browser transport.`);
+            `The cooldown is sticky and applies to the browser transport too, so retrying ` +
+            `immediately will not help — wait a few minutes, then slow the request rate ` +
+            `(createResilientClient({ browser: { minIntervalMs: 2000 } })).`);
         this.path = path;
     }
 }

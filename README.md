@@ -50,14 +50,22 @@ Claude Code picks the skill up from `SKILL.md`. Ask it things like *"find 5 room
 ## Use as a library
 
 ```ts
-import { createResilientClient, flatten } from 'yad2-search';
+import { createResilientClient, flatten, ResidentialProperty } from 'yad2-search';
 
-const yad2 = createResilientClient();   // spawns and manages its own browser
+await using yad2 = createResilientClient();   // spawns and manages its own browser
 const where = await yad2.address.locate('כרמליה חיפה');
-const feed = await yad2.realestate.forSale.search({ ...where, minRooms: 5 });
+const feed = await yad2.realestate.forSale.search({
+  ...where,
+  minRooms: 5,
+  property: ResidentialProperty.Apartment,
+  priceOnly: true,
+});
 
 flatten(feed).forEach((ad) => console.log(ad.address?.street?.text, ad.price));
 ```
+
+`await using` releases the browser at scope exit; without it, call `await yad2.dispose()`
+before the process ends.
 
 ## Use from the CLI
 
@@ -65,6 +73,10 @@ flatten(feed).forEach((ad) => console.log(ad.address?.street?.text, ad.price));
 node dist/cli.js                                     # every command
 node dist/cli.js realestate.forSale.search --help    # params, types, enum members
 node dist/cli.js address.locate '"רמת גן"' --transport browser
+
+# discover the result's real field names, then print them as a table
+node dist/cli.js realestate.forSale.search '{"region":5,"city":4000}' --paths
+node dist/cli.js realestate.forSale.all '{"region":5,"city":4000,"minRooms":5,"property":1}'   --fields token,price,additionalDetails.roomsCount,address.street.text --format table
 ```
 
 ## Scripts

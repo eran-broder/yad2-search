@@ -1,7 +1,9 @@
 import { createBrowserTransport } from '../dist/core/transports/browser-transport.js';
 
-const PORT = Number(process.env.PWHS_PORT ?? process.argv[2]);
-const transport = createBrowserTransport({ port: PORT, minIntervalMs: 600 });
+const supplied = process.env.PWHS_PORT ?? process.argv[2];
+const transport = createBrowserTransport(
+  supplied ? { port: Number(supplied), minIntervalMs: 600 } : { minIntervalMs: 600 },
+);
 
 const GATEWAY = 'https://gw.yad2.co.il';
 

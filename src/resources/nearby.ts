@@ -1,6 +1,7 @@
 import type { Gateway } from '../core/gateway.js';
 import { NearbyPath, Service } from '../core/enums/index.js';
 import { parseParams } from '../core/params.js';
+import { withParams, withRows, type RowsOf } from '../core/describable.js';
 import { NearbyParamsSchema, type NearbyParams } from '../params/nearby.js';
 import { NearbyResultSchema, type NearbyDoc, type NearbyResult } from '../schemas/nearby.js';
 import { collect } from './paginate.js';
@@ -42,8 +43,11 @@ export const createNearbyResource = (gateway: Gateway) => {
   }
 
   return {
-    search,
-    stream,
-    all: (params: NearbyParams, options?: NearbyStreamOptions) => collect(stream(params, options)),
+    search: withParams(withRows(search, ((r: NearbyResult) => r.docs) as RowsOf), NearbyParamsSchema),
+    stream: withParams(stream, NearbyParamsSchema),
+    all: withParams(
+      (params: NearbyParams, options?: NearbyStreamOptions) => collect(stream(params, options)),
+      NearbyParamsSchema,
+    ),
   };
 };

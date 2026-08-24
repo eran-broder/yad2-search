@@ -40,6 +40,9 @@ const walk = async (dir) => {
 
 const LITERAL = /'([^'\\]*)'/g;
 
+// Comments are prose, not code — a quoted word in an explanation is not a magic string.
+const LINE_COMMENT = /^\s*(\/\/|\/\*|\*)/;
+
 const findings = [];
 
 for (const file of await walk(ROOT)) {
@@ -49,6 +52,7 @@ for (const file of await walk(ROOT)) {
 
   const source = await readFile(file, 'utf8');
   source.split('\n').forEach((line, index) => {
+    if (LINE_COMMENT.test(line)) return;
     if (DEFINITION_LINE.some((pattern) => pattern.test(line))) return;
     const cleaned = line
       .replace(TYPEOF_OPERAND, '')

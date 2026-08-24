@@ -5,7 +5,10 @@ import {
   Yad2RequestError,
 } from '../dist/index.js';
 
-const y2 = createBrowserClient({ port: Number(process.argv[2] ?? process.env.PWHS_PORT) });
+const supplied = process.argv[2] ?? process.env.PWHS_PORT;
+// No port supplied means "spawn your own server" — passing NaN would send every
+// request to http://127.0.0.1:NaN, because `NaN ?? fallback` is still NaN.
+const y2 = createBrowserClient(supplied ? { port: Number(supplied) } : {});
 
 const CASES = [
   ['invalid item token', Yad2RequestError, () => y2.items.realestate('zzzzzzzz')],

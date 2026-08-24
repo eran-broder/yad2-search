@@ -84,6 +84,53 @@ numeric (`"691P"`), so ids are typed `number | string`.
 | `/free-search-autocomplete/suggestions?query=` | cross-vertical suggestions |
 | `/carousels/near-me?lat&lon&catID&limit` | geo search, cursor paginated via `nextChunk` |
 
+## Field paths in results
+
+Response field names rarely match the filter names — `minRooms` filters, but the ad reports
+`additionalDetails.roomsCount`, and a car's year lives at `vehicleDates.yearOfProduction`.
+Guessing gives you a silently blank column. These were read off live responses; for anything
+not listed, run the same command with `--paths`.
+
+Real-estate ad (`realestate.{forSale,rent,commercial}`):
+
+| What | Path |
+| --- | --- |
+| id / price | `token`, `price`, `priceBeforeTag` |
+| rooms, size | `additionalDetails.roomsCount`, `additionalDetails.squareMeter`, `metaData.squareMeterBuild` |
+| type, condition | `additionalDetails.property.text`, `additionalDetails.propertyCondition.id` |
+| address | `address.street.text`, `address.house.number`, `address.house.floor`, `address.neighborhood.text`, `address.city.text` |
+| coords | `address.coords.lat`, `address.coords.lon` |
+| seller | `adType` (`private`/`commercial`), `customer.agencyName` |
+| media | `metaData.coverImage`, `metaData.images[]`, `metaData.video` |
+| amenities | `tags[].name` |
+
+Vehicle ad (`vehicles.*`):
+
+| What | Path |
+| --- | --- |
+| id / price | `token`, `price`, `metaData.priceBeforeTag` |
+| **year** | `vehicleDates.yearOfProduction` |
+| model | `manufacturer.text`, `model.text`, `subModel.text` |
+| spec | `engineType.text`, `engineVolume`, `hand.text` |
+| seller | `adType`, `customer.agencyName` |
+
+Market ad (`market.*`) — note it uses `textHeb`, not `text`, for labels:
+`adId`, `title`, `price`, `previousPrice`, `condition.textHeb`, `productType.textHeb`,
+`address.city.textHeb`, `images[]`, `tags[]`. The ads sit under `items`; `totalItems` and
+`totalPages` sit beside it and overstate what the endpoint will actually hand back.
+
+Nearby (`nearby.*`): ads sit under `docs`, addresses use snake_case
+(`address.address_master_id`, `address.area.text_eng`) unlike every other vertical.
+
+Neighbourhood survey: `hoodId`, `segmantList[].title`, `.score` (0–1), `.amountRespondents`.
+
+Project (`projects.*`): `metaData.projectName`, `metaData.companyDetails.name`,
+`additionalDetails.minPrice`/`maxPrice`, `additionalDetails.minRooms`/`maxRooms`,
+`additionalDetails.entranceDate`, `address.city.id`.
+
+**`price` can be `0`** on both real estate and vehicles — that is "call for price", not free.
+Pass `priceOnly: true` to have the server drop those instead of filtering afterwards.
+
 ## Known API quirks
 
 - `engineVolume` is a number on cars, an object on watercraft.

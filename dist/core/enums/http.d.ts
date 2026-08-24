@@ -21,3 +21,10 @@ export declare enum StdioMode {
     Ignore = "ignore",
     Pipe = "pipe"
 }
+export declare enum Signal {
+    Kill = "SIGKILL"
+}
+/** Client members that are lifecycle helpers rather than part of the search surface. */
+export declare enum ClientLifecycle {
+    Dispose = "dispose"
+}

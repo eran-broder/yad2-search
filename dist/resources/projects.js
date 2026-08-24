@@ -3,6 +3,7 @@ import { DeveloperFeedSchema, DeveloperListSchema, ListingListSchema, ProjectFee
 import { DeveloperFeedParamsSchema, DeveloperListParamsSchema, ProjectListParamsSchema, ProjectListingParamsSchema, ProjectSearchParamsSchema, } from '../params/projects.js';
 import { createFeed } from './paged.js';
 import { parseParams } from '../core/params.js';
+import { withParams } from '../core/describable.js';
 const PAGE_SIZE = 18;
 const toPage = (feed) => ({
     items: feed.projects,
@@ -29,5 +30,13 @@ export const createProjectsResource = (gateway) => {
     const autocomplete = (phrase) => gateway
         .getData(path(Yad1Path.ProjectsAutocomplete), { phrase }, ProjectListSchema)
         .then((r) => r.projects);
-    return { ...feed, list, map, listings, developers, developerFeed, autocomplete };
+    return {
+        ...feed,
+        list: withParams(list, ProjectListParamsSchema),
+        map: withParams(map, ProjectListParamsSchema),
+        listings: withParams(listings, ProjectListingParamsSchema),
+        developers: withParams(developers, DeveloperListParamsSchema),
+        developerFeed: withParams(developerFeed, DeveloperFeedParamsSchema),
+        autocomplete,
+    };
 };
