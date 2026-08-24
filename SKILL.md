@@ -75,10 +75,16 @@ const feed = await yad2.realestate.forSale.search({
 });
 ```
 
-`locate` accepts a neighbourhood, city, area or region and returns the best match, falling
-back to the most specific one when several fit equally. Ask for a city and you get the city —
+`locate` accepts a neighbourhood, city, area, region or street and returns the best match,
+falling back to the most specific one when several fit equally. Ask for a city and you get the city —
 `locate('תל אביב')` returns city 5000 with no `neighborhood`, not the hood autocomplete happens
-to rank first. Ask for a neighbourhood and you get it: `locate('כרמליה חיפה')` keeps hood 612.
+to rank first. Ask for a neighbourhood and you get it: `locate('כרמליה חיפה')` keeps hood 612. A street resolves too —
+`locate('אבן גבירול תל אביב')` adds `street: 1040`.
+
+Hebrew is the reliable input: Yad2's autocomplete indexes nothing else. English city names
+still work (`locate('Tel Aviv')`, `'Beer Sheva'`) because the city list carries `city_eng`,
+but transliteration varies — Yad2 spells it `Rishon le-Tsiyon` — so a miss comes back naming
+the closest spellings rather than guessing.
 
 **Narrow on the server, not in JS.** `minRooms` alone is rarely what someone means by
 "apartments" — in כרמליה it returns 48 results spanning `בית פרטי/ קוטג'`, `דו משפחתי`,

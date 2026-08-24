@@ -122,6 +122,10 @@ Market ad (`market.*`) — note it uses `textHeb`, not `text`, for labels:
 Nearby (`nearby.*`): ads sit under `docs`, addresses use snake_case
 (`address.address_master_id`, `address.area.text_eng`) unlike every other vertical.
 
+`address.cities`, `.hoods` and `.streets` do not paginate — they return what `limit` allows
+and never say what was cut. The SDK asks for 10000; the real sizes are 1454 cities, up to
+~3700 streets per city. A larger limit makes the endpoint answer 500.
+
 **Address lists are snake_case too** — `address.cities`, `.hoods`, `.streets`, `.areas`,
 `.regions` return `city_id`/`city_heb`/`city_eng`, `hood_id`/`hood_heb`, `street_id`/`street_heb`,
 plus `title_text` and `full_title_text`. There is no `hoodId` or `hoodName`; asking for those

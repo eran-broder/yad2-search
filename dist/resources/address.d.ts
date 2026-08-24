@@ -7,6 +7,7 @@ export interface SearchLocation {
     readonly area?: EntityId;
     readonly city?: EntityId;
     readonly neighborhood?: EntityId;
+    readonly street?: EntityId;
 }
 export declare const createAddressResource: (gateway: Gateway) => {
     regions: () => Promise<{

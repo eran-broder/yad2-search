@@ -17,10 +17,20 @@ import {
   type Place,
 } from '../schemas/address.js';
 
-const EXTENDED = { [QueryKey.ResultType]: ResultType.Extended, [QueryKey.Limit]: 1000 } as const;
+// These endpoints do not paginate — they return whatever `limit` allows and say nothing
+// about what was cut. At 1000 the city list stopped 454 rows short and omitted Tel Aviv,
+// so anything built on it was quietly wrong. Ask for more than exists.
+const LIST_LIMIT = 10000;
+const MIN_HINT_LENGTH = 3;
+const MAX_HINTS = 3;
 
+const EXTENDED = { [QueryKey.ResultType]: ResultType.Extended, [QueryKey.Limit]: LIST_LIMIT } as const;
+
+// Order decides ties. Hoods sit ahead of streets on purpose: "נווה צדק" is an exact match
+// in both buckets, and someone naming it means the neighbourhood, not the street in it.
 const SPECIFICITY = [
   AddressEntity.Hoods,
+  AddressEntity.Streets,
   AddressEntity.Cities,
   AddressEntity.Areas,
   AddressEntity.TopAreas,
@@ -33,6 +43,7 @@ export interface SearchLocation {
   readonly area?: EntityId;
   readonly city?: EntityId;
   readonly neighborhood?: EntityId;
+  readonly street?: EntityId;
 }
 
 const defined = (entries: Record<string, EntityId | undefined>): SearchLocation =>
@@ -45,13 +56,17 @@ const toLocation = (place: Place): SearchLocation =>
     area: place.area_id,
     city: place.city_id,
     neighborhood: place.hood_id,
+    street: place.street_id,
   });
 
-const SEPARATORS = /[,״"']/g;
+const SEPARATORS = /[,\-–]/g;
+// Dropped rather than spaced: Yad2 writes "Be'er Sheva" and מצפה אבי״ב, but people type
+// "Beer Sheva". Turning the mark into a space would split the word instead of closing it.
+const MARKS = /['"״׳`]/g;
 const WHITESPACE = /\s+/g;
 
 const normalize = (text: string): string =>
-  text.replace(SEPARATORS, ' ').replace(WHITESPACE, ' ').trim().toLowerCase();
+  text.replace(MARKS, '').replace(SEPARATORS, ' ').replace(WHITESPACE, ' ').trim().toLowerCase();
 
 /**
  * How well a candidate answers the query, independent of how specific it is.
@@ -104,10 +119,46 @@ export const createAddressResource = (gateway: Gateway) => {
   const autocomplete = (text: string): Promise<AddressSuggestions> =>
     gateway.getData(path(`${AddressPath.Autocomplete}/${encodeURIComponent(text)}`), {}, AutocompleteSchema);
 
+  /**
+   * Yad2's autocomplete only indexes Hebrew: "Tel Aviv" comes back with every bucket
+   * empty. The city list does carry `city_eng`, so an English name is still resolvable —
+   * just not through autocomplete. Only consulted when autocomplete found nothing, so the
+   * usual Hebrew path still costs one request.
+   */
+  const locateEnglish = async (text: string): Promise<Place | undefined> => {
+    const wanted = normalize(text);
+    const cities = await list(AddressPath.Cities, CitySchema);
+    return (
+      cities.find((city) => city.city_eng !== undefined && normalize(city.city_eng) === wanted) ??
+      cities.find((city) => city.city_eng !== undefined && normalize(city.city_eng).startsWith(wanted))
+    );
+  };
+
+  /**
+   * Transliteration varies more than matching can bridge — Yad2 spells it
+   * "Rishon le-Tsiyon", people type "Rishon LeZion". Rather than guess, show the names
+   * that share a first word so the caller can pick the right one.
+   */
+  const nearbySpellings = async (text: string): Promise<string[]> => {
+    const [first] = normalize(text).split(' ');
+    if (first === undefined || first.length < MIN_HINT_LENGTH) return [];
+    const cities = await list(AddressPath.Cities, CitySchema);
+    return cities
+      .filter((city) => city.city_eng !== undefined && normalize(city.city_eng).startsWith(first))
+      .slice(0, MAX_HINTS)
+      .map((city) => `${city.city_eng as string} (${city.city_heb})`);
+  };
+
   const locate = async (text: string): Promise<SearchLocation> => {
-    const place = bestMatch(text, await autocomplete(text));
-    if (!place) throw new Yad2NotFoundError(`location "${text}"`);
-    return toLocation(place);
+    const place = bestMatch(text, await autocomplete(text)) ?? (await locateEnglish(text));
+    if (place) return toLocation(place);
+
+    const hints = await nearbySpellings(text);
+    throw new Yad2NotFoundError(
+      hints.length
+        ? `location "${text}". Yad2 indexes Hebrew; did you mean ${hints.join(', ')}?`
+        : `location "${text}". Yad2's autocomplete only indexes Hebrew — try the Hebrew name.`,
+    );
   };
 
   return {
