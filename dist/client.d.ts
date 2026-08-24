@@ -5327,7 +5327,7 @@ export interface ResilientClientOptions {
     readonly curl?: CurlTransportOptions;
     readonly retry?: RetryTransportOptions;
 }
-export declare const createResilientClient: ({ browser, http, curl, retry, }: ResilientClientOptions) => {
+export declare const createResilientClient: ({ browser, http, curl, retry, }?: ResilientClientOptions) => {
     vehicles: import("./resources/vehicles.js").VehiclesResource;
     realestate: {
         forSale: import("./resources/realestate.js").RealestateFeedResource<{

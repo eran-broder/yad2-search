@@ -75,7 +75,7 @@ export const createResilientClient = ({
   http = {},
   curl = {},
   retry = {},
-}: ResilientClientOptions) =>
+}: ResilientClientOptions = {}) =>
   createYad2Client({
     transport: createFallbackTransport(
       createRetryTransport(createFetchTransport(http), retry),
