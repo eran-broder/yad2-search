@@ -183,8 +183,9 @@ whenever you are unsure of a field name.
 
 ```bash
 cd ${CLAUDE_SKILL_DIR}
-npm run verify     # 8 live checks: schema coverage, param parity, enum values,
-                   # error behaviour, full surface exercise, bulk validation, soak, lint
+npm run verify     # 9 live checks: schema coverage, param parity, enum values,
+                   # error behaviour, full surface exercise, bulk validation, CLI
+                   # exit codes, soak, lint
 npm run surface    # print the generated API surface
 ```
 

@@ -31,6 +31,7 @@ const CHECKS = [
   ['error behaviour', 'tools/error-behavior.mjs', /error behaviour: 0 failures/g, 1],
   ['surface exercise', 'tools/exercise-surface.mjs', /surface exercise: 0 failures/g, 1],
   ['bulk validation', 'tools/validate-bulk.mjs', /distinct failures: 0/g, 1],
+  ['cli smoke', 'tools/cli-smoke.mjs', /cli smoke: 0 failures/g, 1],
   ['integration soak', 'examples/soak.mjs', /failures: 0/g, 1],
 ];
 

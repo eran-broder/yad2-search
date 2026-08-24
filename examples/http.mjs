@@ -16,6 +16,6 @@ try {
   if (!(error instanceof Yad2BlockedError)) throw error;
   console.log('Yad2 bot protection challenged this client fingerprint.');
   console.log('Node and curl each get a small request budget before a sticky cooldown.');
-  console.log('For sustained use run createBrowserClient({ port }) against playwright-http-server,');
+  console.log('For sustained use switch to createBrowserClient(), which spawns its own browser,');
   console.log('or ask Yad2 to allowlist the SDK user-agent.');
 }
