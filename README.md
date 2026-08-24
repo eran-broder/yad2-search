@@ -3,10 +3,34 @@
 A Claude Code skill and typed Node SDK for searching [Yad2](https://www.yad2.co.il) — Israeli
 real estate, vehicles, new-construction projects and the second-hand marketplace.
 
-## Install as a Claude Code skill
+## Install as a Claude Code plugin
+
+```
+/plugin marketplace add eran-broder/yad2-search
+/plugin install yad2-search@yad2-search
+/reload-plugins
+```
+
+Claude Code clones the repo into its plugin cache and runs `npm ci --ignore-scripts` there, so
+nothing needs installing by hand. The skill is then available as `/yad2-search`.
+
+To pin it for a single repo, commit this to `.claude/settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "yad2-search": {
+      "source": { "source": "github", "repo": "eran-broder/yad2-search" }
+    }
+  },
+  "enabledPlugins": { "yad2-search@yad2-search": true }
+}
+```
+
+## Install as a plain skill
 
 ```bash
-git clone <repo-url> ~/.claude/skills/yad2-search
+git clone https://github.com/eran-broder/yad2-search.git ~/.claude/skills/yad2-search
 cd ~/.claude/skills/yad2-search && npm install
 ```
 

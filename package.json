@@ -13,6 +13,7 @@
   },
   "files": [
     "dist",
+    ".claude-plugin",
     "SKILL.md",
     "references",
     "README.md"

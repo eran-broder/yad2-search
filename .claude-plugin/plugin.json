@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "yad2-search",
+  "displayName": "Yad2 Search",
+  "version": "0.1.0",
+  "description": "Search Yad2 — Israeli real estate, vehicles, new-construction projects and the second-hand marketplace — through a typed Node SDK and its reflected CLI.",
+  "author": { "name": "Eran Broder", "url": "https://github.com/eran-broder" },
+  "homepage": "https://github.com/eran-broder/yad2-search",
+  "repository": "https://github.com/eran-broder/yad2-search",
+  "license": "MIT",
+  "keywords": ["yad2","israel","real-estate","vehicles","marketplace","listings","search"]
+}
