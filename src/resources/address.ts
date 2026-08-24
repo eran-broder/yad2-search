@@ -47,8 +47,47 @@ const toLocation = (place: Place): SearchLocation =>
     neighborhood: place.hood_id,
   });
 
-const mostSpecific = (suggestions: AddressSuggestions): Place | undefined =>
-  SPECIFICITY.map((bucket) => suggestions[bucket]?.[0]).find(Boolean);
+const SEPARATORS = /[,״"']/g;
+const WHITESPACE = /\s+/g;
+
+const normalize = (text: string): string =>
+  text.replace(SEPARATORS, ' ').replace(WHITESPACE, ' ').trim().toLowerCase();
+
+/**
+ * How well a candidate answers the query, independent of how specific it is.
+ * Autocomplete returns a best guess in every bucket, so a hood is always present even
+ * when it barely matches — "תל אביב" yields the hood "תל ברוך" alongside the city
+ * "תל אביב יפו". Taking the hood because hoods are more specific silently narrows a
+ * city-wide search to one neighbourhood.
+ */
+const matchScore = (query: string, place: Place): number => {
+  const wanted = normalize(query);
+  const titles = [place.title_text, place.full_title_text]
+    .filter((title): title is string => title !== undefined)
+    .map(normalize);
+  if (titles.some((title) => title === wanted)) return 3;
+  if (titles.some((title) => title.startsWith(wanted))) return 2;
+  if (titles.some((title) => title.includes(wanted))) return 1;
+  return 0;
+};
+
+/** Best match wins; ties go to the more specific bucket, which is the useful default. */
+const bestMatch = (query: string, suggestions: AddressSuggestions): Place | undefined => {
+  // SPECIFICITY runs most-specific first, so a strict `>` leaves ties with the narrower
+  // place — "כרמליה חיפה" still resolves to the neighbourhood, not the city.
+  let best: Place | undefined;
+  let bestScore = -1;
+  for (const bucket of SPECIFICITY) {
+    const place = suggestions[bucket]?.[0];
+    if (place === undefined) continue;
+    const score = matchScore(query, place);
+    if (score > bestScore) {
+      best = place;
+      bestScore = score;
+    }
+  }
+  return best;
+};
 
 export const createAddressResource = (gateway: Gateway) => {
   const path = (suffix: string): string => `/${Service.AddressMaster}${suffix}`;
@@ -66,7 +105,7 @@ export const createAddressResource = (gateway: Gateway) => {
     gateway.getData(path(`${AddressPath.Autocomplete}/${encodeURIComponent(text)}`), {}, AutocompleteSchema);
 
   const locate = async (text: string): Promise<SearchLocation> => {
-    const place = mostSpecific(await autocomplete(text));
+    const place = bestMatch(text, await autocomplete(text));
     if (!place) throw new Yad2NotFoundError(`location "${text}"`);
     return toLocation(place);
   };

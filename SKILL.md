@@ -75,7 +75,10 @@ const feed = await yad2.realestate.forSale.search({
 });
 ```
 
-`locate` accepts a neighbourhood, city, area or region and returns the most specific match.
+`locate` accepts a neighbourhood, city, area or region and returns the best match, falling
+back to the most specific one when several fit equally. Ask for a city and you get the city —
+`locate('תל אביב')` returns city 5000 with no `neighborhood`, not the hood autocomplete happens
+to rank first. Ask for a neighbourhood and you get it: `locate('כרמליה חיפה')` keeps hood 612.
 
 **Narrow on the server, not in JS.** `minRooms` alone is rarely what someone means by
 "apartments" — in כרמליה it returns 48 results spanning `בית פרטי/ קוטג'`, `דו משפחתי`,

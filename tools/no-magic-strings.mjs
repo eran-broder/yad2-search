@@ -3,7 +3,8 @@ import { join, relative } from 'node:path';
 
 const ROOT = 'src';
 const DEFINITION_DIRS = ['src/core/enums'];
-const ALLOWED_FILES = new Set(['src/cli/zod-types.ts']);
+// Files whose whole purpose is to define the constants everything else refers to.
+const ALLOWED_FILES = new Set(['src/cli/zod-types.ts', 'src/core/identity.ts']);
 const SOURCE_EXTENSIONS = ['.ts'];
 const NEWLINE = '\n';
 const toPosix = (file) => relative('.', file).split('\\').join('/');
