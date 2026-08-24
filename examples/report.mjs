@@ -1,11 +1,14 @@
 import { writeFile } from 'node:fs/promises';
 import { createBrowserClient, RealestateDeal, isFilterLabels } from '../dist/index.js';
 
-const [, , portArg, outArg] = process.argv;
+const [, , portArg, outArg, placeArg] = process.argv;
+const PLACE = placeArg ?? 'כרמליה חיפה';
 const y2 = createBrowserClient(portArg ? { port: Number(portArg) } : {});
 const out = outArg ?? 'carmelia.html';
 
-const AREA = { region: 5, city: 4000, neighborhood: 612 };
+// Resolved rather than hardcoded: a wrong region returns zero results instead of an
+// error, and locate() answers from the baked index without a request.
+const AREA = await y2.address.locate(PLACE);
 const AMENITY_LABELS = {
   includeElevator: 'מעלית',
   includeParking: 'חניה',
@@ -186,7 +189,7 @@ const SCRIPT = `
 
   apply();`;
 
-const page = (listings, described) => `<title>כרמליה · חיפה</title>
+const page = (listings, described) => `<title>${esc(PLACE)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -194,9 +197,9 @@ const page = (listings, described) => `<title>כרמליה · חיפה</title>
 </style>
 
 <header>
-  <div class="eyebrow">חיפה · שכונת כרמליה</div>
-  <h1>דירות למכירה בכרמליה</h1>
-  <p class="sub">כל המודעות הפעילות בשכונה, 5 חדרים ומעלה — נאסף ישירות מ־Yad2.</p>
+  <div class="eyebrow">${esc(PLACE)}</div>
+  <h1>דירות למכירה ב${esc(PLACE)}</h1>
+  <p class="sub">כל המודעות הפעילות באזור, 5 חדרים ומעלה — נאסף ישירות מ־Yad2.</p>
   <p class="filters">${esc(described.join(' · '))}</p>
   <div class="stats">
     ${statsFor(listings)
