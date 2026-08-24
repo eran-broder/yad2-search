@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { RealestateDeal, VehicleCategory } from './enums/index.js';
-export type ParamContext = `vehicles.${VehicleCategory}` | `realestate.${RealestateDeal}` | 'realestate.map' | 'market.search' | 'market.collection' | 'projects.search' | 'projects.list' | 'projects.listings' | 'projects.developers' | 'projects.developerFeed' | 'nearby.search' | 'catalog' | 'labels';
+export type ParamContext = `vehicles.${VehicleCategory}` | `realestate.${RealestateDeal}` | 'realestate.map' | 'market.search' | 'market.collection' | 'projects.search' | 'projects.list' | 'projects.listings' | 'projects.developers' | 'projects.developerFeed' | 'nearby.search' | 'catalog' | 'labels' | 'options';
 export declare const parseParams: <S extends z.ZodTypeAny>(context: ParamContext, schema: S, value: unknown) => z.infer<S>;
 /**
  * Validate a positional enum argument. Only the params object goes through Zod, so a bad

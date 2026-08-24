@@ -104,8 +104,10 @@ realestate.{forSale,rent,commercial}                          .search .stream .a
 realestate.map(deal, params)
 projects        search stream all list map listings developers developerFeed autocomplete
 market          search collection filters collectionFilters autocomplete menuItems
-address         regions topAreas areas cities hoods streets autocomplete locate
+address         regions topAreas areas cities hoods(cityId?) streets(cityId) autocomplete
+                locate(text)                                                      [mostly offline]
 catalog         catalog options manufacturers models subModels specialTypes
+                findManufacturer(name, category)  findSpecialType(name, category)   [offline]
 items           realestate(token) vehicle(token)
 labels          realestate(deal, params) vehicles(category, params)
 neighborhood    survey(hoodId) suggestions(query)

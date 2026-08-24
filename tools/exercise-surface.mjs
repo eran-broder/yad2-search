@@ -67,6 +67,10 @@ const ARGS = {
   'catalog.models': [HYUNDAI],
   'catalog.subModels': [HYUNDAI, 10287],
   'catalog.specialTypes': [VehicleCategory.Trucks],
+  'catalog.findManufacturer': ['Toyota', VehicleCategory.Cars],
+  // Trucks have no manufacturers; their makes live in specialTypes, so this is the
+  // equivalent lookup for them.
+  'catalog.findSpecialType': ['וולוו', VehicleCategory.Trucks],
   'labels.realestate': [RealestateDeal.ForSale, HAIFA],
   'labels.vehicles': [VehicleCategory.Cars, { manufacturer: HYUNDAI }],
   'neighborhood.survey': [CARMELIA_HOOD],

@@ -15,7 +15,8 @@ export type ParamContext =
   | 'projects.developerFeed'
   | 'nearby.search'
   | 'catalog'
-  | 'labels';
+  | 'labels'
+  | 'options';
 
 export const parseParams = <S extends z.ZodTypeAny>(
   context: ParamContext,
